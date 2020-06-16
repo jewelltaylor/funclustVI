@@ -1,0 +1,13 @@
+Package: funclustVI
+Type: Package
+Title: Cluster Functional Data using Variational Inference 
+Version: 0.1.0
+Author: John Jewell <taylorjewell@outlook.com>
+Maintainer: John Jewell <taylorjewell@outlook.com>
+Description: 
+    The following package was created by John Jewell as a part of my Undergraduate Dissertation at Western University under the supervision of Professor Camila de Souza.
+    The package serves to cluster functional data using variational inference. More details in regards to the functionality of the package is available in the examples section.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.0
