@@ -21,8 +21,6 @@ The package serves to cluster functional data using variational inference. More 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of funclustVI is to ...
-
 ## Installation
 
 You can install the released version of funclustVI from [CRAN](https://CRAN.R-project.org) with:

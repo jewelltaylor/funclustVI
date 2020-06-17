@@ -13,8 +13,6 @@ functionality of the package is available in the examples section.
 
 <!-- badges: end -->
 
-The goal of funclustVI is to …
-
 ## Installation
 
 You can install the released version of funclustVI from
@@ -58,7 +56,7 @@ model = funcslustVI(Y, K, nbasis, x, init, true_cluster_assignments, gamma_dist_
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 1 2 2 1 2 2 2 2 2 1 3 3 3 3 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1 1
+#>  [1] 3 3 3 3 3 3 3 3 3 3 2 2 2 2 2 2 2 2 2 2 3 1 3 1 1 1 3 3 1 1
 ```
 
 This is an example which shows how to run simulations. Since draw =
