@@ -13,7 +13,7 @@ library(gtools)
 
 Mismatch <- function(predicited_clusters, true_clusters, K)
 {
-  sigma = permutations(n=K,r=K,v=1:K)
+  sigma = gtools::permutations(n=K,r=K,v=1:K)
   
   Miss = length(which( true_clusters != predicited_clusters))  ## for permutation 1, 2,... K
   

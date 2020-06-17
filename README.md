@@ -22,8 +22,6 @@ You can install the released version of funclustVI from
 
 ``` r
 install.packages("funclustVI")
-install.packages("fda")
-library(fda)
 ```
 
 And the development version from [GitHub](https://github.com/) with:
@@ -35,8 +33,8 @@ devtools::install_github("jewelltaylor/funclustVI")
 
 ## Example
 
-This is a basic example which shows you how to use the package to
-generate cluster assignments from functional data/
+This is an example which shows you how to use the package to generate
+cluster assignments from functional data.
 
 ``` r
 library(funclustVI)
@@ -60,12 +58,36 @@ model = funcslustVI(Y, K, nbasis, x, init, true_cluster_assignments, gamma_dist_
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 3 3 3 3 3 3 3 3 3 3 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 3 1 1 1
+#>  [1] 1 2 2 1 2 2 2 2 2 1 3 3 3 3 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1 1
 ```
 
-You can also embed plots, for example:
+This is an example which shows how to run simulations. Since draw =
+True, a plot is generated showing the true vs estimated functions.
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
+``` r
+#Simulation Arguments 
+case = "Case_7"
+x = seq(from=0,to=pi/3, length = 100)
+curves_per_cluster = 10
+number_of_simulations = 1
+Y = Case_7(x, curves_per_cluster)
+K = 3 
+initialization_method = "km"
+nbasis = 6
+true_cluster_assignments = rep(1:K,each = curves_per_cluster)
+gamma_dist_config_matrix = matrix(0, 2, K)
+gamma_dist_config_matrix[1, ] = c(78.125, 78.125, 78.125) * 100
+gamma_dist_config_matrix[2, ] = c(12.5, 12.5, 12.5) * 100
+convergence_threshold = 1
+save_path = NULL
+verbose = FALSE
+draw = TRUE 
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub\!
+simulation_results = run_simulations(case, x, K, curves_per_cluster, number_of_simulations, initialization_method, nbasis, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold, save_path, verbose, draw)
+```
+
+<img src="man/figures/README-simulation_plot-1.png" width="100%" />
+
+    #> mm =  2 vm =  0.8410911 seed =  1 
+    #> Average Mismatches:  2 
+    #> Average V-measure:  0.8410911

@@ -56,7 +56,7 @@ funcslustVI <- function(Y, K, nbasis, x, init, true_cluster_assignments, gamma_d
   }
   
   if (verbose == TRUE) {
-      cat("Probability Matrix Initialization")
+      print("Probability Matrix Initialization")
       print(probability_matrix)
   }
   

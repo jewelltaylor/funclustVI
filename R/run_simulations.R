@@ -46,8 +46,8 @@ run_simulations <- function(case, x, K, curves_per_cluster, number_of_simulation
   avg_mm = mm_sum / count
   avg_vm = vm_sum / count
   
-  cat("Average Mismatches: ", avg_mm)
-  cat("Averahe V-measure: ", avg_vm)
+  cat("Average Mismatches: ", avg_mm, "\n")
+  cat("Average V-measure: ", avg_vm, "\n")
   
   if(is.null(save_path) == FALSE) {
     write(res_mat, save_path)
@@ -163,7 +163,7 @@ get_mismatches <- function(cluster_assignments, K, curves_per_cluster) {
 #' @examples get_v_measure(cluster_assignments, K, curves_per_cluster)
 
 get_v_measure <- function(cluster_assignments, K, curves_per_cluster) {
-  v_measure = vmeasure(cluster_assignments, rep(1:K,each = curves_per_cluster))$v_measure
+  v_measure = sabre::vmeasure(cluster_assignments, rep(1:K,each = curves_per_cluster))$v_measure
   return(v_measure)
 }
 
@@ -180,7 +180,7 @@ get_v_measure <- function(cluster_assignments, K, curves_per_cluster) {
 
 plot_data <- function(x, Y, K, nbasis, m_list, true_m_not) {
   curves_per_cluster = NROW(Y) / K
-  matplot(x,t(Y),type="l",col=c(rep(1, curves_per_cluster), rep(2, curves_per_cluster), rep(3,curves_per_cluster)))
+  #matplot(x,t(Y),type="l",col=c(rep(1, curves_per_cluster), rep(2, curves_per_cluster), rep(3,curves_per_cluster)))
   B = get_B(x, nbasis)
   
   plot(x, B %*% true_m_not[1, ], col=1, lwd=2, type="l", ylim=c(1, 6), main="Plot", ylab="f(x)")
@@ -191,31 +191,3 @@ plot_data <- function(x, Y, K, nbasis, m_list, true_m_not) {
   lines(x, B %*% t(m_list[[3]]), col=2, lwd=2)
 }
 
-algo = "fdcvi"
-case = "Case_7"
-x = seq(from=0,to=pi/3, length = 100)
-K = 3
-curves_per_cluster = 50
-number_of_simulations = 1
-initialization_method = "km"
-nbasis = 6
-MULTIPLIER = 10
-true_cluster_assignments = rep(1:K,each = curves_per_cluster)
-gamma_dist_config_matrix = matrix(0, 2, K)
-gamma_dist_config_matrix[1, ] = c(78.125, 78.125, 78.125) * 100
-gamma_dist_config_matrix[2, ] = c(12.5, 12.5, 12.5) * 100
-save_path = NULL 
-verbose = FALSE 
-draw = TRUE 
-
-#gamma_dist_config_matrix[1, ] = c(41.1, 41.1, 41.1) * MULTIPLIER
-#gamma_dist_config_matrix[2, ] = c(3.7, 3.7, 3.7) * MULTIPLIER
-convergence_threshold = 1
-#set.seed(1)
-
-#Y = Case_7(x, curves_per_cluster)
-
-#matplot(x,t(Y),type="l",col=c(rep(1,50),rep(2,50),rep(4,50)))
-
-
-run_simulations(case, x, K, curves_per_cluster, number_of_simulations, initialization_method, nbasis, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold, save_path, verbose, draw)
