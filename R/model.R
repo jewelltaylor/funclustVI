@@ -1,26 +1,26 @@
 library(fda)
 library(MASS)
-library(fda.usc)
-#' Fit the model to the data
-#' 
-#' File Wide Imports
-#' @import fda
-#' @import MASS
-#' @import fda.usc
+source("R/elbo_convergence.R")
+
+#' Generates cluster assignments and related information given functional data. 
 #'
-#' @param Y The matrix containing rows corresponding the curves
-#' @param function_data The data generated from the actual functions
+#' @param Y A matrix in which the rows represent the curves 
 #' @param K The number of clusters in the data
-#' @param x The x used to generate the clusters
 #' @param nbasis The number of basis functions
+#' @param x The dependent variable 
+#' @param init The initialization method for the algorithim
+#' @param true_cluster_assignments The true cluster assignments 
+#' @param gamma_dist_config_matrix A matrix where the rows are the alpha and parameters for each cluster
+#' @param convergence_threshold The threshold that determines when the model has converged 
+#' @param verbose A boolean indicating whether or not to print the inner parameters of the model
 #'
-#' @return The fitted model
+#' @return The fitted model 
 #' 
 #' @export
 #'
-#' @examples fit(Y, K)
+#' @examples fit(Y, K, nbasis, x, init, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold)
 
-fit <- function(Y, K, nbasis, x, init, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold) {
+funcslustVI <- function(Y, K, nbasis, x, init, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold, verbose) {
   probability_matrix = NULL
   
   if (init == 'hcl') {
@@ -55,48 +55,42 @@ fit <- function(Y, K, nbasis, x, init, true_cluster_assignments, gamma_dist_conf
     R_vector = get_beta_vector(tau_list)
   }
   
-  #print("Initializations")
-  #print("Probability Matrix")
-  #print(probability_matrix)
-  #print("Alpha Not Vector")
-  #print(alpha_vector)
-  #print("A vector")
-  #print(A_vector)
-  #print("R vector")
-  #print(R_vector)
-  #print("M Not")
-  #print(phi_matrix)
-  #print("Start Iteration")
+  if (verbose == TRUE) {
+      cat("Probability Matrix Initialization")
+      print(probability_matrix)
+  }
+  
+  
   
   converged = FALSE
   prev_elbo = NULL
-  
+  iteration = 0
   while (converged == FALSE) {
-    #print(toString(iteration))
+    iteration = iteration + 0
     sigma_list = update_sigma_list(Y, phi_matrix, K, A_vector, R_vector, probability_matrix, x, nbasis)
-    #print("Sigma List")
-    #print(sigma_list)
-    #print("M List")
     m_list = update_m_list(Y, m_not_vector, phi_matrix, K, A_vector, R_vector, probability_matrix, x, nbasis, sigma_list)
-    #print(m_list)
-    #print("A vector")
-    #print(A_vector)
-    #print("R vector")
     R_vector = update_R_vector(Y, K, probability_matrix, x, sigma_list, m_list, nbasis, beta_vector)
-    #R_vector = get_beta_vector(tau_list, observations_per_curve)
-    #print(R_vector)
-    #print("D vector")
     d_vector = update_d_vector(Y, K, probability_matrix)
-    #print(d_vector)
-    #print("Probability Matrix")
     probability_matrix = update_probability_matrix(Y, K, probability_matrix, x, sigma_list, m_list, A_vector, R_vector, d_vector, nbasis)
-    #print(probability_matrix)
     phi_matrix = get_approx_phi_matrix(Y, K, nbasis, probability_matrix, x)
-    
     curr_elbo = get_elbo(x, Y, K, phi_matrix, m_not_vector, nbasis, sigma_list, m_list, A_vector, R_vector, d_vector, probability_matrix, alpha_vector, beta_vector)
-    print(curr_elbo)
     converged = check_convergence(prev_elbo, curr_elbo, convergence_threshold)
     prev_elbo = curr_elbo
+    
+    if (verbose == TRUE) {
+      cat("Iteration: ", toString(iteration))
+      cat("Sigma List")
+      print(sigma_list)
+      cat("M List")
+      print(m_list)
+      cat("R Vector")
+      print(R_vector)
+      cat("D vector")
+      print(d_vector)
+      cat("Probability Matrix")
+      print(probability_matrix)
+      cat("ELBO: ", toString(curr_elbo))
+    }
   }
   cluster_assignments = get_final_cluster_assignments(probability_matrix)
   result_list = list("probability_matrix" = probability_matrix, "cluster_assignments" = cluster_assignments, "m_list" = m_list, "i_p" = i_p, "true_m_not" = true_m_not)
@@ -106,8 +100,8 @@ fit <- function(Y, K, nbasis, x, init, true_cluster_assignments, gamma_dist_conf
 #' Update the sigma parameter for each cluster
 #'
 #' @param Y The matrix containing rows corresponding the curves
-#' @param K The total number of clusters
 #' @param phi_matrix A matrix of the coffecient vectors for each cluster, phi_k, of the basis matrix B
+#' @param K The total number of clusters
 #' @param A_vector A vector
 #' @param R_vector A vector
 #' @param probability_matrix A matrix in which the rows represent the probabilities that the curve is in each of the clusters
@@ -117,15 +111,13 @@ fit <- function(Y, K, nbasis, x, init, true_cluster_assignments, gamma_dist_conf
 #' @return A list of the updated sigma parameters for each cluster
 #'
 #' @examples
-#' update_sigma_list(Y, K, A_vector, R_vector, probability_matrix, x, nbasis)
+#' update_sigma_list(Y, phi_matrix, K, A_vector, R_vector, probability_matrix, x, nbasis) 
 #'
 
 update_sigma_list <- function(Y, phi_matrix, K, A_vector, R_vector, probability_matrix, x, nbasis) {
   ev_q_tau = A_vector / R_vector
   I = diag(nbasis)
-  #print("V not vector")
   v_not_vector = get_v_not_vector(Y, x, probability_matrix, phi_matrix, K, nbasis)
-  #print(v_not_vector)
   B = get_B(x, nbasis)
   sigma_list = list()
   for (i in 1:K) {
@@ -146,14 +138,16 @@ update_sigma_list <- function(Y, phi_matrix, K, A_vector, R_vector, probability_
 
 #' Update the m parameter for each cluster
 #'
-#' @param K The total number of cluster
+#' @param Y The matrix containing rows corresponding the curves
+#' @param m_not_vector The vector containing m_not values for each cluster
+#' @param phi_matrix A matrix of the coffecient vectors for each cluster, phi_k, of the basis matrix B
+#' @param K The total number of clusters
 #' @param A_vector A vector
 #' @param R_vector A vector
 #' @param probability_matrix A matrix in which the rows represent the probabilities that the curve is in each of the clusters
 #' @param x The x used to generate the clusters
-#' @param sigma_vector A vector containing the sigma
 #' @param nbasis The number of basis functions
-#' @param sigma_vector A vector of the updated sigma parameters for each cluster
+#' @param sigma_list A list of the updated sigma parameters for each cluster
 #'
 #' @return A list of the updated m parameters for each cluster
 #'
@@ -184,18 +178,17 @@ update_m_list <- function(Y, m_not_vector, phi_matrix, K, A_vector, R_vector, pr
 #'
 #' @param Y The matrix containing rows corresponding the curves
 #' @param K The total number of clusters
-#' @param A_vector A vector
-#' @param R_vector A vector
 #' @param probability_matrix A matrix in which the rows represent the probabilities that the curve is in each of the clusters
 #' @param x The x used to generate the clusters
-#' @param nbasis The number of basis functions
-#' @param sigma_vector A vector of the updated sigma parameters for each cluster
-#' @param m_vector A vector of the updated m parameters for each cluster
-#'
+#' @param sigma_list A list of the updated sigma_list parameters for each cluster
+#' @param m_list A vlist of the updated m parameters for each cluster
+#' @param nbasis The number of basis functions]
+#' @param beta_vector A vector of the beta parameters for each cluster
+#' 
 #' @return A vector of the updated R parameters for each cluster
 #'
 #' @examples
-#' update_R_vector(K, A_vector, R_vector, probability_matrix, x, nbasis)
+#' update_R_vector(Y, K, probability_matrix, x, sigma_list, m_list, nbasis, beta_vector)
 #'
 update_R_vector <- function(Y, K, probability_matrix, x, sigma_list, m_list, nbasis, beta_vector) {
   tau_list = get_tau_list(Y, probability_matrix, K)
@@ -221,9 +214,9 @@ update_R_vector <- function(Y, K, probability_matrix, x, sigma_list, m_list, nba
 #' Update the d parameter for each cluster
 #'
 #' @param Y The matrix containing rows corresponding the curves
-#' @param probability_matrix A matrix in which the rows represent the probabilities that the curve is in each of the clusters
 #' @param K The total number of clusters
-#'
+#' @param probability_matrix A matrix in which the rows represent the probabilities that the curve is in each of the clusters
+#' 
 #' @return A vector of the updated d parameters for each cluster
 #'
 #' @examples
@@ -247,17 +240,19 @@ update_d_vector <- function(Y, K, probability_matrix) {
 #' Update the probabilty matrix
 #'
 #' @param Y The matrix containing rows corresponding the curves
-#' @param m_list A list of the m parameters for each cluster
-#' @param d_vector A vector of the d parameters for each cluster
 #' @param K The total number of clusters
-#' @param phi_matrix A matrix of the coffecient vectors for each cluster, phi_k, of the basis matrix B
-#' @param A_vector A vector
-#' @param R_vector A vector
 #' @param probability_matrix A matrix in which the rows represent the probabilities that the curve is in each of the clusters
 #' @param x The x used to generate the clusters
+#' @param m_list A list of the m parameters for each cluster
+#' @param A_vector A vector
+#' @param R_vector A vector
+#' @param d_vector A vector of the d parameters for each cluster
 #' @param nbasis The number of basis functions
+#' 
+#' @return The updated probability matrix 
+#' 
 #' @examples
-#' update_probability_matrix()
+#' update_probability_matrix(Y, K, probability_matrix, x, sigma_list, m_list, A_vector, R_vector, d_vector, nbasis)
 
 update_probability_matrix <- function(Y, K, probability_matrix, x, sigma_list, m_list, A_vector, R_vector, d_vector, nbasis) {
   probability_matrix = matrix(0, NROW(Y), K)
@@ -299,7 +294,7 @@ update_probability_matrix <- function(Y, K, probability_matrix, x, sigma_list, m
 
 #' Generates a matrix in which each row represents the variances of the curves in each cluster
 #'
-#' @param Y The matrix containing rows corresponding the curves
+#' @param Y The matrix containing rows corresponding to the curves
 #' @param probability_matrix A matrix in which the rows represent the probabilities that the curve is in each of the clusters
 #' @param K The number of entries in each curve vector
 #'
@@ -358,7 +353,7 @@ get_tau_list <- function(Y, probability_matrix, K) {
 #' @return A vector A
 #'
 #' @examples
-#' get_A(alpha_vector)
+#' get_A(alpha_vector, observations_per_curv)
 
 get_A_vector <- function(alpha_vector, observations_per_curve) {
   A_vector = alpha_vector + observations_per_curve / 2
@@ -372,7 +367,7 @@ get_A_vector <- function(alpha_vector, observations_per_curve) {
 #' @return A vector that in which the entries are the alpha parameters of the gamma distribution (1 / variance) of the curves in each cluster
 #'
 #' @examples
-#' get_alpha_vector(tau_list, observations_per_cluster_x)
+#' get_alpha_vector(tau_list)
 
 get_alpha_vector <- function(tau_list) {
   alpha_vector = c(1:length(tau_list))*0
@@ -389,12 +384,11 @@ get_alpha_vector <- function(tau_list) {
 #' Generates a vector in which the entries are the beta parameters of the gamma distribution (1 / variance) of the curves in each cluster
 #'
 #' @param tau_list A list in which each index is the tau vector for that cluster
-#' @param observations_per_curve The number of entries in each curve vector
 #'
 #' @return A vector that in which the entries are the beta parameters of the gamma distribution (1 / variance) of the curves in each cluster
 #'
 #' @examples
-#' get_betas(tau_list, observations_per_cluster_x)
+#' get_beta_vector(tau_list, observations_per_cluster_x)
 
 get_beta_vector <- function(tau_list) {
   beta_vector = c(1:length(tau_list))*0
@@ -412,30 +406,15 @@ get_beta_vector <- function(tau_list) {
   return(beta_vector)
 }
 
-#' Generates probability matrix with equal proability values for each cluster
-#'
-#' @param number_of_clusters The number of clusters in cluster data
-#' @param curves_per_cluster The number of curves per cluster
-#'
-#' @return A probability matrix with equal probability vlaues for each cluster
-#'
-#' @examples get_equal_probability_matrix(number_of_clusters, curves_per_cluster)
-
-get_equal_probability_matrix <- function(cluster_data, number_of_clusters) {
-  val = 1 / number_of_clusters
-  number_of_curves = NROW(cluster_data)
-  probability_matrix = matrix(val, number_of_curves, number_of_clusters)
-  return(probability_matrix)
-}
-
 #' Generates probability matrix with approximated probability values for each cluster
-#'
+#' 
+#' @param Y The matrix containing rows corresponding the curves
 #' @param K The number of clusters in cluster data
-#' @param curves_per_cluster The number of curves per cluster
+#' @param x The dependent variable 
 #'
-#' @return A probability matrix with probability values for each cluster
+#' @return A probability matrix with approximated probability values for each cluster suign kmeans 
 #'
-#' @examples get_equal_probability_matrix(K, curves_per_cluster)
+#' @examples get_approx_probability_matrix(Y, K, x)
 
 get_approx_probability_matrix_km <- function(Y, K, x) {
   res = kmeans(Y, K)
@@ -451,12 +430,13 @@ get_approx_probability_matrix_km <- function(Y, K, x) {
 
 #' Generates probability matrix with approximated probability values for each cluster
 #'
+#' @param Y The matrix containing rows corresponding the curves
 #' @param K The number of clusters in cluster data
-#' @param curves_per_cluster The number of curves per cluster
+#' @param x The x used to generate the clusters
 #'
 #' @return A probability matrix with probability values for each cluster
 #'
-#' @examples get_equal_probability_matrix(K, curves_per_cluster)
+#' @examples get_equal_probability_matrix(K, curves_per_cluster, x)
 
 get_approx_probability_matrix_hcl <- function(Y, K, x) {
   predictions = cutree(hclust(dist(cluster_data), method = "ward"), number_of_clusters)
@@ -472,13 +452,12 @@ get_approx_probability_matrix_hcl <- function(Y, K, x) {
 #' Generates B matrix
 #'
 #' @param x The x used to generate the clusters
-#' @param total_number_of_curves The total number of curves
 #' @param nbasis The number of basis functions
 #'
 #' @return A matrix in which row represent curves of various clusters
 #'
 #' @examples
-#' get_B(x, total_number_of_curves, nbasis)
+#' get_B(x, nbasis)
 
 get_B <- function(x, nbasis) {
   rangeval = c(0, x[length(x)])
@@ -492,14 +471,13 @@ get_B <- function(x, nbasis) {
 #' @param Y The matrix containing rows corresponding the curves
 #' @param K The total number of clusters
 #' @param nbasis The number of basis functions
-#' @param probability_matrix A matrix in which the rows represent the probabilities that the curve is in each of the clusters
+#' @param probability_matrix The x used to generate the clusters
 #' @param x The x used to generate the clusters
-#'
-#'
+#' 
 #' @return A matrix of the coffecient vectors for each cluster, phi_k, of the basis matrix B
 #'
 #' @examples
-#' get_approx_phi_matrix(Y, K, x, nbasis)
+#' get_approx_phi_matrix(Y, K, nbasis, probability_matrix, x)
 
 get_approx_phi_matrix <- function(Y, K, nbasis, probability_matrix, x) {
   function_data = get_approx_function_data(Y, K, probability_matrix)
@@ -518,8 +496,9 @@ get_approx_phi_matrix <- function(Y, K, nbasis, probability_matrix, x) {
 
 #' Gets the vnot parameter
 #'
+#' @param Y The matrix containing rows corresponding the curves
 #' @param x The x used to generate the clusters
-#' @param function_data The data generated from the actual functions
+#' @param probability_matrix The x used to generate the clusters
 #' @param phi_matrix A matrix of the coffecient vectors for each cluster, phi_k, of the basis matrix B
 #' @param K The total number of clusters
 #' @param nbasis The number of basis functions
@@ -527,7 +506,7 @@ get_approx_phi_matrix <- function(Y, K, nbasis, probability_matrix, x) {
 #' @return The vnot parameter
 #'
 #' @examples
-#' get_vnot(x, K)
+#' get_vnot(Y, x, probability_matrix, phi_matrix, K, nbasis)
 
 get_v_not_vector <- function(Y, x, probability_matrix, phi_matrix, K, nbasis) {
   cumulative_phi_matrix = get_cumulative_phi_matrix(Y, x, nbasis)
@@ -588,7 +567,7 @@ get_d_not_vector <- function(K) {
 
 #' Gets functional data approximations
 #'
-#' @param Y
+#' @param Y The matrix containing rows corresponding the curves
 #' @param K The total number of clusters
 #' @param probability_matrix A matrix in which the rows represent the probabilities that the curve is in each of the clusters
 #'
@@ -623,11 +602,12 @@ get_approx_function_data <- function(Y, K, probability_matrix) {
 #'
 #' @param Y The matrix containing rows corresponding the curves
 #' @param x The x used to generate the clusters
+#' @param nbasis The number of basis functions
 #'
 #' @return a matrix of the coffecient vectors, phi, for each curve
 #'
 #' @examples
-#' get_cumulative_phi_matrix(Y, x)
+#' get_cumulative_phi_matrix(Y, x, nbasis)
 
 get_cumulative_phi_matrix <- function(Y, x, nbasis) {
   observations_per_curve = length(x)
@@ -643,6 +623,15 @@ get_cumulative_phi_matrix <- function(Y, x, nbasis) {
   return(cumulative_phi_matrix)
 }
 
+#' Gets a vector of the final cluster assignments based on the probability matrix 
+#'
+#' @param probability_matrix A matrix in which the rows represent the probabilities that the curve is in each of the clusters
+#' 
+#' @return A vector of the final cluster assignments
+#'
+#' @examples
+#' get_final_cluster_assignments(probability_matrix)
+
 get_final_cluster_assignments <- function(probability_matrix) {
   final_cluster_assignments = c(1:NROW(probability_matrix))
   
@@ -657,24 +646,15 @@ get_final_cluster_assignments <- function(probability_matrix) {
   return(final_cluster_assignments)
 }
 
-Mismatch <- function(mm, true_clusters, K)
-{
-  sigma = permutations(n=K,r=K,v=1:K)
-  
-  Miss = length(which( true_clusters != mm))  ## for permutation 1, 2,... K
-  
-  mm_aux = mm
-  for (ind in 2:dim(sigma)[1])
-  {
-    
-    for (j in 1:K)
-      mm_aux[which(mm == j)] = sigma[ind,j]
-    
-    Miss[ind] =  length(which( true_clusters != mm_aux))
-    
-  }
-  return(min(Miss))
-}
+#' Gets the true probability natrix using the true cluster assignments 
+#'
+#' @param true_cluster_assignments A vector containing the true cluster assignments 
+#' @param K The number of clusters in the data 
+#' 
+#' @return The true probability matrix of the true cluster assignments
+#'
+#' @examples
+#' get_true_probability_matrix(true_cluster_assignments, K)
 
 get_true_probability_matrix <- function(true_cluster_assignments, K) {
   number_of_curves = length(true_cluster_assignments)
@@ -686,6 +666,21 @@ get_true_probability_matrix <- function(true_cluster_assignments, K) {
   return(probability_matrix)
 }
 
+#' Gets the vector with the true m_not values
+#'
+#' @param x The x used to generate the clusters
+#' @param Y The matrix containing rows corresponding the curves
+#' @param K The number of clusters in the data 
+#' @param nbasis The number of basis functions
+#' @param true_cluster_assignments A vector containing the true cluster assignments 
+#' 
+#' 
+#' @return The vector with the true m_not values 
+#'
+#' @examples
+#' get_true_m_no(x, Y, K, nbasis, true_cluster_assignments)
+
+
 get_true_m_not <- function(x, Y, K, nbasis, true_cluster_assignments) {
   curves_per_cluster = NROW(Y) / K
   true_m_not = matrix(0, K, NCOL(Y))
@@ -694,72 +689,3 @@ get_true_m_not <- function(x, Y, K, nbasis, true_cluster_assignments) {
   return(true_m_not)
 }
 
-get_elbo <- function(x, Y, K, phi_matrix, m_not_vector, nbasis, sigma_list, m_list, A_vector, R_vector, d_vector, probability_matrix, alpha_vector, beta_vector) {
-  B = get_B(x, nbasis)
-  diff_pi_sum = 0
-  d_not_vector = get_d_not_vector(K)
-  for (k in 1:K) {
-    ev_pi_log_tau_k = digamma(d_vector[k]) - digamma(sum((d_vector)))
-    diff_pi_sum = (d_not_vector[k] - d_vector[k]) * ev_pi_log_tau_k + diff_pi_sum
-  }
-  diff_pi = diff_pi_sum
-  
-  diff_z_sum_1 = 0
-  diff_z_sum_2 = 0
-  for (i in 1:NROW(Y)) {
-    for (k in 1:K) {
-      ev_pi_log_tau_k = digamma(d_vector[k]) - digamma(sum((d_vector)))
-      diff_z_sum_1 = probability_matrix[i, k] * ev_pi_log_tau_k + diff_z_sum_1
-      if (probability_matrix[i, k] <= .01 ) {
-        diff_z_sum_2 = probability_matrix[i, k] + 1e-20 + diff_z_sum_2
-      } else {
-        diff_z_sum_2 = probability_matrix[i, k] * log10(probability_matrix[i, k]) + diff_z_sum_2
-      }
-    }
-  }
-  diff_z = diff_z_sum_1 - diff_z_sum_2
-  
-  diff_phi_sum = 0
-  v_not_vector = get_v_not_vector(Y, x, probability_matrix, phi_matrix, K, nbasis)
-  for (k in 1:K) {
-    diff_phi_sum = sum(diag(sigma_list[[k]])) + (m_list[[k]] - m_not_vector[k, ]) %*% t(m_list[[k]] - m_not_vector[k, ]) + diff_phi_sum
-  }
-  
-  diff_phi = as.numeric(diff_phi_sum)
-  
-  tau_list = get_tau_list(Y, probability_matrix, K)
-  diff_tau_sum_1 = 0
-  diff_tau_sum_2 = 0
-  for (k in 1:K) {
-    ev_tau_k_log_tau_k = digamma(A_vector[k]) - log10(R_vector[k])
-    diff_tau_sum_1 = (alpha_vector[k] - 1) * ev_tau_k_log_tau_k - beta_vector[k] * (A_vector[k] / R_vector[k])
-    diff_tau_sum_2 = (A_vector[k] - 1) * ev_tau_k_log_tau_k - A_vector[k]
-  }
-  diff_tau = diff_tau_sum_1 - diff_tau_sum_2
-  
-  ev_log_lik_sum = 0
-  for (i in 1:NROW(Y)) {
-    for (k in 1:K) {
-      ev_tau_k_log_tau_k = digamma(A_vector[k]) - log10(R_vector[k])
-      ev_phi = sum(diag(B %*% sigma_list[[k]] %*% t(B))) + t((Y[i, ] - B %*% t(m_list[[k]]))) %*% (Y[i, ] - B %*% t(m_list[[k]]))
-      ev_log_lik_sum = probability_matrix[i, k] * (1/2 * ev_tau_k_log_tau_k - 1/2 * (A_vector[k] / R_vector[k]) * ev_phi) + ev_log_lik_sum
-    }
-  }
-  ev_log_lik = as.numeric(ev_log_lik_sum)
-  
-  elbo = diff_pi + diff_z + diff_phi + diff_tau + ev_log_lik
-  return(elbo)
-}
-
-check_convergence <- function(prev_elbo, curr_elbo, convergence_threshold) {
-  if (is.null(prev_elbo) == TRUE) {
-    return(FALSE)
-  }
-  
-  dif = abs(abs(curr_elbo) - abs(prev_elbo))
-  if (dif  <= convergence_threshold)  {
-    return(TRUE)
-  } else {
-    return(FALSE)
-  }
-}
