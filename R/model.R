@@ -130,7 +130,7 @@ update_sigma_list <- function(Y, phi_matrix, K, A_vector, R_vector, probability_
     }
     
     mat = ev_q_tau[i] * sum_matrix
-    sigma = ginv(mat)
+    sigma = MASS::ginv(mat)
     sigma_list[[i]] = sigma
   }
   return(sigma_list)
@@ -461,8 +461,8 @@ get_approx_probability_matrix_hcl <- function(Y, K, x) {
 
 get_B <- function(x, nbasis) {
   rangeval = c(0, x[length(x)])
-  basisobj = create.bspline.basis(rangeval, nbasis)
-  B <- getbasismatrix(x, basisobj=basisobj)
+  basisobj = fda::create.bspline.basis(rangeval, nbasis)
+  B <- fda::getbasismatrix(x, basisobj=basisobj)
   return(B)
 }
 
@@ -484,11 +484,11 @@ get_approx_phi_matrix <- function(Y, K, nbasis, probability_matrix, x) {
   observations_per_curve = length(x)
   min_arg = x[1]
   max_arg = x[observations_per_curve]
-  basisobj = create.bspline.basis(c(min_arg, max_arg), nbasis)
+  basisobj = fda::create.bspline.basis(c(min_arg, max_arg), nbasis)
   phi_matrix = matrix(0, K, nbasis)
   for (i in 1:K) {
     f = function_data[i, ]
-    phi = smooth.basis(argvals = x, y = f, fdParobj = basisobj)$fd$coef
+    phi = fda::smooth.basis(argvals = x, y = f, fdParobj = basisobj)$fd$coef
     phi_matrix[i, ] = c(phi)
   }
   return(phi_matrix)
@@ -613,11 +613,11 @@ get_cumulative_phi_matrix <- function(Y, x, nbasis) {
   observations_per_curve = length(x)
   min_arg = x[1]
   max_arg = x[observations_per_curve]
-  basisobj = create.bspline.basis(c(min_arg, max_arg), nbasis)
+  basisobj = fda::create.bspline.basis(c(min_arg, max_arg), nbasis)
   cumulative_phi_matrix = matrix(0, NROW(Y), nbasis)
   for (i in 1:NROW(Y)) {
     f = Y[i, ]
-    phi = smooth.basis(argvals = x, y = f, fdParobj = basisobj)$fd$coef
+    phi = fda::smooth.basis(argvals = x, y = f, fdParobj = basisobj)$fd$coef
     cumulative_phi_matrix[i, ] = c(phi)
   }
   return(cumulative_phi_matrix)

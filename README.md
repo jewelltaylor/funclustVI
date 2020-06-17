@@ -22,6 +22,8 @@ You can install the released version of funclustVI from
 
 ``` r
 install.packages("funclustVI")
+install.packages("fda")
+library(fda)
 ```
 
 And the development version from [GitHub](https://github.com/) with:
@@ -33,29 +35,33 @@ devtools::install_github("jewelltaylor/funclustVI")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how to use the package to
+generate cluster assignments from functional data/
 
 ``` r
 library(funclustVI)
-## basic example code
+
+# Model Arguments 
+x = seq(from=0,to=pi/3, length = 100)
+curves_per_cluster = 10
+Y = Case_7(x, curves_per_cluster)
+K = 3 
+init = "km"
+nbasis = 6
+true_cluster_assignments = rep(1:K,each = curves_per_cluster)
+gamma_dist_config_matrix = matrix(0, 2, K)
+gamma_dist_config_matrix[1, ] = c(78.125, 78.125, 78.125) * 100
+gamma_dist_config_matrix[2, ] = c(12.5, 12.5, 12.5) * 100
+convergence_threshold = 1
+verbose = FALSE
+
+model = funcslustVI(Y, K, nbasis, x, init, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold, verbose)
+
+cluster_assignemnts = model$cluster_assignments
+
+print(cluster_assignemnts)
+#>  [1] 3 3 3 3 3 3 3 3 3 3 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 3 1 1 1
 ```
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date.
 
 You can also embed plots, for example:
 
