@@ -89,8 +89,8 @@ gamma_dist_config_matrix[1, ] = c(78.125, 78.125, 78.125) * 100
 gamma_dist_config_matrix[2, ] = c(12.5, 12.5, 12.5) * 100
 convergence_threshold = 1
 save_path = NULL
-verbose = TRUE
-draw = FALSE
+verbose = FALSE
+draw = TRUE
 
 data_params = list()
 model_params = list()

@@ -60,7 +60,7 @@ model = funcslustVI(Y, x, K, init, nbasis, convergence_threshold, gamma_dist_con
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 3 3 3 3 3 3 3 3 3 3 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1
+#>  [1] 3 3 3 2 3 3 2 3 3 3 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2
 ```
 
 This is an example which shows how to run simulations. Since draw =

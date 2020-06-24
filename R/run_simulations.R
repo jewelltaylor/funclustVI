@@ -133,6 +133,8 @@ get_funclustVI_cluster_assignments <- function(Y, data_params, model_params) {
 #' @param curves_per_cluster The number of curves per cluster 
 #'
 #' @return The number of mismatches  
+#' 
+#' @export
 #'
 #' @examples get_mismatches(cluster_assignments, K, curves_per_cluster)
 
@@ -150,6 +152,8 @@ get_mismatches <- function(cluster_assignments, data_params) {
 #' @param curves_per_cluster The number of curves per cluster 
 #'
 #' @return The vmeasure
+#' 
+#' @export
 #'
 #' @examples get_v_measure(cluster_assignments, K, curves_per_cluster)
 
