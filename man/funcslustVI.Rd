@@ -6,32 +6,33 @@
 \usage{
 funcslustVI(
   Y,
-  K,
-  nbasis,
   x,
+  K,
   init,
-  true_cluster_assignments,
-  gamma_dist_config_matrix,
+  nbasis,
   convergence_threshold,
-  verbose
+  gamma_dist_config_matrix,
+  true_cluster_assignments,
+  verbose,
+  draw
 )
 }
 \arguments{
 \item{Y}{A matrix in which the rows represent the curves}
 
-\item{K}{The number of clusters in the data}
-
-\item{nbasis}{The number of basis functions}
-
 \item{x}{The dependent variable}
+
+\item{K}{The number of clusters in the data}
 
 \item{init}{The initialization method for the algorithim}
 
-\item{true_cluster_assignments}{The true cluster assignments}
+\item{nbasis}{The number of basis functions}
+
+\item{convergence_threshold}{The threshold that determines when the model has converged}
 
 \item{gamma_dist_config_matrix}{A matrix where the rows are the alpha and parameters for each cluster}
 
-\item{convergence_threshold}{The threshold that determines when the model has converged}
+\item{true_cluster_assignments}{The true cluster assignments}
 
 \item{verbose}{A boolean indicating whether or not to print the inner parameters of the model}
 }
@@ -42,5 +43,5 @@ The fitted model
 Generates cluster assignments and related information given functional data.
 }
 \examples{
-fit(Y, K, nbasis, x, init, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold)
+fit(Y, x, K, init, nbasis, convergence_threshold, gamma_dist_config_matrix, true_cluster_assignments, verbose, draw)
 }

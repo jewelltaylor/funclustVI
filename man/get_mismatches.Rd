@@ -4,7 +4,7 @@
 \alias{get_mismatches}
 \title{Gets the number of mismatches for a single iteration of the simulation}
 \usage{
-get_mismatches(cluster_assignments, K, curves_per_cluster)
+get_mismatches(cluster_assignments, data_params)
 }
 \arguments{
 \item{cluster_assignments}{A vector where each entry is the cluster assignment for the corresponging curve}

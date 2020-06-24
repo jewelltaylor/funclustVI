@@ -4,6 +4,7 @@ source("R/simulate_data.R")
 source("R/model.R")
 source("R/evaluation_metrics.R")
 
+
 #' Runs and evaluates the model on the specified simulated function data 
 #'
 #' @param case The case used to simulate the data
@@ -26,115 +27,87 @@ source("R/evaluation_metrics.R")
 #'
 #' @examples run_simulations(case, x, K, curves_per_cluster, number_of_simulations, initialization_method, nbasis, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold, save_path, verbose, draw)
 
-run_simulations <- function(case, x, K, curves_per_cluster, number_of_simulations, initialization_method, nbasis, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold, save_path, verbose, draw) {
-  res_mat = matrix(0, number_of_simulations, 2)
-  mm_sum = 0
-  vm_sum = 0
+
+run_simulations <- function(data_params, model_params, eval_func_list, number_of_simulations, save_path) {
+  num_of_eval_funcs = length(eval_func_list)
+  eval_func_name_list = names(eval_func_list)
+  eval_metric_sum_vector = c(1:num_of_eval_funcs)*0 
+  final_res_mat = matrix(0, number_of_simulations, num_of_eval_funcs)
+  
   count = 0
-  for (i in 1:number_of_simulations) {
-    res = compute_function(i, case, x, K, curves_per_cluster, initialization_method, nbasis, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold, verbose, draw)
-    mm = res$mismatches
-    res_mat[i, 1] = mm
-    mm_sum = mm + mm_sum
-    vm = res$v_measure
-    res_mat[i, 2] = vm
-    vm_sum = vm + vm_sum
+  for (simulation_number in 1:number_of_simulations) {
+    res = compute_function(simulation_number, data_params, model_params, eval_func_list)
+    
+    for (i in 1:num_of_eval_funcs) {
+      prev_sum = eval_metric_sum_vector[i]
+      curr_val = res[[i]]
+      final_res_mat[simulation_number, i] = curr_val
+      eval_metric_sum_vector[i] = prev_sum + curr_val
+      eval_func_name = eval_func_name_list[i]
+      cat(eval_func_name, " = ", curr_val)
+    }
+    cat("\n")
     count = count + 1
-    cat("mm = ", mm, "vm = ", vm, "seed = ", i, "\n")
   }
   
-  avg_mm = mm_sum / count
-  avg_vm = vm_sum / count
+  eval_metric_avg_vector = eval_metric_sum_vector / count
   
-  cat("Average Mismatches: ", avg_mm, "\n")
-  cat("Average V-measure: ", avg_vm, "\n")
+  for(i in 1:num_of_eval_funcs) {
+    eval_func_name = eval_func_name_list[i]
+    avg_val = eval_metric_avg_vector[i]
+    cat("Average ", eval_func_name, " = ", avg_val)
+  }
+  cat("\n")
   
   if(is.null(save_path) == FALSE) {
-    write(res_mat, save_path)
+    write(ffinal_res_mat, save_path)
   }
   
-  return(res_mat)
+  return(final_res_mat)
 }
 
-#' Runs and evaluates the model on the specified simulated function data for a single iteration  
-#'
-#' @param simulation_number The iteration number in the set of simulations 
-#' @param case The case used to simulate the data
-#' @param x The dependent variable 
-#' @param K The number of clusters in the data
-#' @param curves_per_cluster The number of curves per cluster 
-#' @param initialization_method The initialization method for the algorithim
-#' @param nbasis The number of basis functions
-#' @param true_cluster_assignments The true cluster assignments 
-#' @param gamma_dist_config_matrix A matrix where the rows are the alpha and parameters for each cluster
-#' @param convergence_threshold The threshold that determines when the model has converged 
-#' @param verbose A boolean indicating whether or not to print the inner parameters of the model
-#' @param draw A boolean indicating whether or not to draw the true function vs the 
-#'
-#' @return A list with the various accuracy scores at each index
-#'
-#' @examples compute_function(simulation_number, case, x, K, curves_per_cluster, initialization_method, nbasis, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold, verbose, draw)
-
-compute_function <- function(simulation_number, case, x, K, curves_per_cluster, initialization_method, nbasis, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold, verbose, draw) {
+compute_function <- function(simulation_number, data_params, model_params, eval_func_list) {
   set.seed(simulation_number)
-  Y = NULL
+  num_of_eval_funcs = length(eval_func_list)
+  eval_func_name_list = names(eval_func_list)
   
-  if (case == "Case_7") {
-    Y = Case_7(x, curves_per_cluster)
-  } else if(case == "Case_8") {
-    Y = Case_8(x, curves_per_cluster)
-  } else if(case == "Case_9") {
-    Y = Case_9(x, curves_per_cluster)
-  } else if(case == "Case_11") {
-    Y = Case_11(x, curves_per_cluster)
-  } else if(case == "Case_12") {
-    Y = Case_12(x, curves_per_cluster)
-  } else {
-    Y = Case_44(x, curves_per_cluster)
+  generate_data = data_params$generate_data
+  
+  Y = generate_data(data_params)
+  
+  eval_metric_res_vector = c(1:num_of_eval_funcs)*0
+  
+  model_func = model_params$model_func
+  
+  cluster_assignments = model_func(Y, data_params, model_params)
+  
+  result_list = list()
+  
+  for(i in 1:num_of_eval_funcs) {
+    eval_func_name = eval_func_name_list[i]
+    eval_func = eval_func_list[[i]]
+    res = eval_func(cluster_assignments, data_params)
+    result_list[[eval_func_name]] = res
   }
   
-  mismatches = NULL
-  v_measure = NULL
-  cluster_assignments = get_fdcvi_cluster_assignments(Y, K, nbasis, x, initialization_method, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold, verbose, draw)
-  mismatches = get_mismatches(cluster_assignments, K, curves_per_cluster)
-  v_measure = get_v_measure(cluster_assignments, K, curves_per_cluster)
-  result_list = list("mismatches" = mismatches, "v_measure" = v_measure)
   return(result_list)
 }
 
-#' Gets the clustering assignments generated by the algorithim 
-#'
-#' @param Y A matrix in which the rows represent the curves 
-#' @param K The number of clusters in the data
-#' @param nbasis The number of basis functions
-#' @param x The dependent variable 
-#' @param initialization_method The initialization method for the algorithim
-#' @param true_cluster_assignments The true cluster assignments 
-#' @param gamma_dist_config_matrix A matrix where the rows are the alpha and parameters for each cluster
-#' @param convergence_threshold The threshold that determines when the model has converged 
-#' @param curves_per_cluster The number of curves per cluster 
-#'
-#' @return The cluster assignments generated by the algorithim 
-#'
-#' @examples get_fdcvi_cluster_assignments(Y, K, nbasis, x, initialization_method, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold, verbose, draw) 
-
-get_fdcvi_cluster_assignments <- function(Y, K, nbasis, x, initialization_method, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold, verbose, draw) {
-  curves_per_cluster = NROW(Y) / K
-  fdcvi = funcslustVI(Y, K, nbasis, x, initialization_method, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold, verbose)
-  init_probability_matrix = fdcvi$i_p
-  init_cluster_assignments = get_final_cluster_assignments(init_probability_matrix)
-  init_mm = get_mismatches(init_cluster_assignments, K, curves_per_cluster)
-  probability_matrix = fdcvi$probability_matrix
-  cluster_assignments = fdcvi$cluster_assignments
-  m_list = fdcvi$m_list
-  true_m_not = fdcvi$true_m_not
-  
-  if (draw == TRUE) {
-    plot_data(x, Y, K, nbasis, m_list, true_m_not)
-  }
-  
+get_funclustVI_cluster_assignments <- function(Y, data_params, model_params) {
+  x = data_params$x
+  K = data_params$K
+  init = model_params$init
+  nbasis = model_params$nbasis
+  convergence_threshold = model_params$convergence_threshold
+  gamma_dist_config_matrix = model_params$gamma_dist_config_matrix
+  true_cluster_assignments = data_params$true_cluster_assignments
+  verbose = model_params$verbose 
+  draw = model_params$draw
+  clf = funcslustVI(Y, x, K, init, nbasis, convergence_threshold, gamma_dist_config_matrix, true_cluster_assignments, verbose, draw)
+  cluster_assignments = clf$cluster_assignments
   return(cluster_assignments)
 }
+
 
 #' Gets the number of mismatches for a single iteration of the simulation 
 #'
@@ -147,8 +120,9 @@ get_fdcvi_cluster_assignments <- function(Y, K, nbasis, x, initialization_method
 #' @examples get_mismatches(cluster_assignments, K, curves_per_cluster)
 
 
-get_mismatches <- function(cluster_assignments, K, curves_per_cluster) {
-  mismatches = Mismatch(cluster_assignments, rep(1:K,each = curves_per_cluster), K)
+get_mismatches <- function(cluster_assignments, data_params) {
+  true_cluster_assignments = data_params$true_cluster_assignments
+  mismatches = Mismatch(cluster_assignments, true_cluster_assignments, K)
   return(mismatches)
 }
 
@@ -162,32 +136,10 @@ get_mismatches <- function(cluster_assignments, K, curves_per_cluster) {
 #'
 #' @examples get_v_measure(cluster_assignments, K, curves_per_cluster)
 
-get_v_measure <- function(cluster_assignments, K, curves_per_cluster) {
-  v_measure = sabre::vmeasure(cluster_assignments, rep(1:K,each = curves_per_cluster))$v_measure
+get_v_measure <- function(cluster_assignments, data_params) {
+  true_cluster_assignments = data_params$true_cluster_assignments
+  v_measure = sabre::vmeasure(cluster_assignments, true_cluster_assignments)$v_measure
   return(v_measure)
 }
 
-#' Generates a plot with the true vs predicted curves
-#'
-#' @param x The dependent variable 
-#' @param Y A matrix in which the rows represent the curves 
-#' @param K The number of clusters in the data
-#' @param nbasis The number of basis functions
-#' @param m_list A list of the updated m parameters for each cluster
-#' @param true_m_not A matrix containing the true m_not vectors for each cluster
-#'
-#' @examples plot_data(x, Y, K, nbasis, m_list, true_m_not)
-
-plot_data <- function(x, Y, K, nbasis, m_list, true_m_not) {
-  curves_per_cluster = NROW(Y) / K
-  #matplot(x,t(Y),type="l",col=c(rep(1, curves_per_cluster), rep(2, curves_per_cluster), rep(3,curves_per_cluster)))
-  B = get_B(x, nbasis)
-  
-  plot(x, B %*% true_m_not[1, ], col=1, lwd=2, type="l", ylim=c(1, 6), main="Plot", ylab="f(x)")
-  lines(x, B %*% true_m_not[2, ], col=1, lwd=2)
-  lines(x, B %*% true_m_not[3, ], col=1, lwd=2)
-  lines(x, B %*% t(m_list[[1]]), col=2, lwd=2)
-  lines(x, B %*% t(m_list[[2]]), col=2, lwd=2)
-  lines(x, B %*% t(m_list[[3]]), col=2, lwd=2)
-}
 

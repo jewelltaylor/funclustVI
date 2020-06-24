@@ -5,22 +5,18 @@
 \title{Runs and evaluates the model on the specified simulated function data}
 \usage{
 run_simulations(
-  case,
-  x,
-  K,
-  curves_per_cluster,
+  data_params,
+  model_params,
+  eval_func_list,
   number_of_simulations,
-  initialization_method,
-  nbasis,
-  true_cluster_assignments,
-  gamma_dist_config_matrix,
-  convergence_threshold,
-  save_path,
-  verbose,
-  draw
+  save_path
 )
 }
 \arguments{
+\item{number_of_simulations}{The number of simulations to evatuate the model over}
+
+\item{save_path}{Pathway to save}
+
 \item{case}{The case used to simulate the data}
 
 \item{x}{The dependent variable}
@@ -28,8 +24,6 @@ run_simulations(
 \item{K}{The number of clusters in the data}
 
 \item{curves_per_cluster}{The number of curves per cluster}
-
-\item{number_of_simulations}{The number of simulations to evatuate the model over}
 
 \item{initialization_method}{The initialization method for the algorithim}
 
@@ -40,8 +34,6 @@ run_simulations(
 \item{gamma_dist_config_matrix}{A matrix where the rows are the alpha and parameters for each cluster}
 
 \item{convergence_threshold}{The threshold that determines when the model has converged}
-
-\item{save_path}{Pathway to save}
 
 \item{verbose}{A boolean indicating whether or not to print the inner parameters of the model}
 

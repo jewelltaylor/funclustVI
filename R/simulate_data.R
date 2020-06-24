@@ -11,9 +11,11 @@
 #' @examples
 #' Case_7(x, n)
 
-Case_7 <- function(x, n) # 3 clusters
+Case_7 <- function(data_params) # 3 clusters
 {
   K = 3
+  x = data_params$x
+  n = data_params$curves_per_cluster
   Y = matrix(0,length(x), K*n) ## each curve is in a row
   for (i in 1:n)
   {
@@ -36,9 +38,11 @@ Case_7 <- function(x, n) # 3 clusters
 #' @examples
 #' Case_8(x, n)
 
-Case_8 <- function(x, n) # 3 clusters
+Case_8 <- function(data_params) # 3 clusters
 {
   K = 3
+  x = data_params$x
+  n = data_params$curves_per_cluster
   Y = matrix(0,length(x), K*n) ## each curve is in a row
   for (i in 1:n)
   {
@@ -61,9 +65,11 @@ Case_8 <- function(x, n) # 3 clusters
 #' @examples
 #' Case_9(x, n)
 
-Case_9 <- function(x, n) # 3 clusters
+Case_9 <- function(data_params) # 3 clusters
 {
   K = 3
+  x = data_params$x
+  n = data_params$curves_per_cluster
   Y = matrix(0,length(x), K*n) ## each curve is in a row
   for (i in 1:n)
   {
@@ -87,9 +93,11 @@ Case_9 <- function(x, n) # 3 clusters
 #' Case_11(x, n)
 
 
-Case_11 <- function(x, n) # 4 clusters
+Case_11 <- function(data_params) # 4 clusters
 {
   K = 4
+  x = data_params$x
+  n = data_params$curves_per_cluster
   Y = matrix(0,length(x), K*n) ## each curve is in a row
   for (i in 1:n)
   {
@@ -113,9 +121,11 @@ Case_11 <- function(x, n) # 4 clusters
 #' @examples
 #' Case_12(x, n)
 
-Case_12 <- function(x, n) # 5 clusters
+Case_12 <- function(data_params) # 5 clusters
 {
   K = 5
+  x = data_params$x
+  n = data_params$curves_per_cluster
   Y = matrix(0,length(x), K*n) ## each curve is in a row
   for (i in 1:n)
   {
@@ -140,9 +150,11 @@ Case_12 <- function(x, n) # 5 clusters
 #' @examples
 #' Case_44(x, n)
 
-Case_44 <- function(x, n) # 6 clusters
+Case_44 <- function(data_params) # 6 clusters
 {
   K = 6
+  x = data_params$x
+  n = data_params$curves_per_cluster
   Y = matrix(0,length(x), K*n) ## each curve is in a row
   for (i in 1:n)
   {

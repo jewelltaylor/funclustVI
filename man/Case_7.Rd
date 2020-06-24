@@ -4,7 +4,7 @@
 \alias{Case_7}
 \title{Gets simulated data from Case_7}
 \usage{
-Case_7(x, n)
+Case_7(data_params)
 }
 \arguments{
 \item{x}{The x used to generate the clusters}

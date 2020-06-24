@@ -1,6 +1,7 @@
 library(fda)
 library(MASS)
 source("R/elbo_convergence.R")
+source("R/plot.R")
 
 #' Generates cluster assignments and related information given functional data. 
 #'
@@ -18,22 +19,28 @@ source("R/elbo_convergence.R")
 #' 
 #' @export
 #'
-#' @examples fit(Y, K, nbasis, x, init, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold)
+#' @examples fit(Y, x, K, init, nbasis, convergence_threshold, gamma_dist_config_matrix, true_cluster_assignments, verbose, draw)
 
-funcslustVI <- function(Y, K, nbasis, x, init, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold, verbose) {
+funcslustVI <- function(Y, x, K, init, nbasis, convergence_threshold, gamma_dist_config_matrix, true_cluster_assignments, verbose, draw) {
   probability_matrix = NULL
   
   if (init == 'hcl') {
     probability_matrix = get_approx_probability_matrix_hcl(Y, K)
   } else if (init == 'tpm') {
     probability_matrix = get_true_probability_matrix(true_cluster_assignments, K)
+  } else if (init == "cust") {
+    probability_matrix = init
   } else {
     probability_matrix = get_approx_probability_matrix_km(Y, K, x)
   }
   
   i_p = probability_matrix
   tau_list = get_tau_list(Y, probability_matrix, K)
-  true_m_not = get_true_m_not(x, Y, K, nbasis, true_cluster_assignments)
+  
+  if (draw == TRUE & is.null(true_cluster_assignments) == FALSE) {
+    true_m_not = get_true_m_not(x, Y, K, nbasis, true_cluster_assignments)
+  }
+  
   phi_matrix = get_approx_phi_matrix(Y, K, nbasis, probability_matrix, x)
   m_not_vector = phi_matrix
   
@@ -60,7 +67,7 @@ funcslustVI <- function(Y, K, nbasis, x, init, true_cluster_assignments, gamma_d
       print(probability_matrix)
   }
   
-  
+  B = get_B(x, nbasis)
   
   converged = FALSE
   prev_elbo = NULL
@@ -93,7 +100,12 @@ funcslustVI <- function(Y, K, nbasis, x, init, true_cluster_assignments, gamma_d
     }
   }
   cluster_assignments = get_final_cluster_assignments(probability_matrix)
-  result_list = list("probability_matrix" = probability_matrix, "cluster_assignments" = cluster_assignments, "m_list" = m_list, "i_p" = i_p, "true_m_not" = true_m_not)
+  result_list = list("probability_matrix" = probability_matrix, "cluster_assignments" = cluster_assignments, "m_list" = m_list, "i_p" = i_p)
+  
+  if (draw == TRUE & is.null(true_cluster_assignments) == FALSE) {
+    plot_data(x, B, m_list, true_m_not)
+  }
+  
   return(result_list)
 }
 
@@ -682,10 +694,9 @@ get_true_probability_matrix <- function(true_cluster_assignments, K) {
 
 
 get_true_m_not <- function(x, Y, K, nbasis, true_cluster_assignments) {
-  curves_per_cluster = NROW(Y) / K
-  true_m_not = matrix(0, K, NCOL(Y))
   true_probability_matrix = get_true_probability_matrix(true_cluster_assignments, K)
   true_m_not = get_approx_phi_matrix(Y, K, nbasis, true_probability_matrix, x)
   return(true_m_not)
 }
+
 
