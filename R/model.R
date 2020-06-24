@@ -86,15 +86,15 @@ funcslustVI <- function(Y, x, K, init, nbasis, convergence_threshold, gamma_dist
     
     if (verbose == TRUE) {
       cat("Iteration: ", toString(iteration))
-      cat("Sigma List")
+      print("Sigma List")
       print(sigma_list)
-      cat("M List")
+      print("M List")
       print(m_list)
-      cat("R Vector")
+      print("R Vector")
       print(R_vector)
-      cat("D vector")
+      print("D vector")
       print(d_vector)
-      cat("Probability Matrix")
+      print("Probability Matrix")
       print(probability_matrix)
       cat("ELBO: ", toString(curr_elbo))
     }
