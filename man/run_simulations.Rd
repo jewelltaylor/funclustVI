@@ -13,31 +13,15 @@ run_simulations(
 )
 }
 \arguments{
-\item{number_of_simulations}{The number of simulations to evatuate the model over}
+\item{model_params}{List object containing the parameters required for model the data and generating the cluster assignments}
 
-\item{save_path}{Pathway to save}
+\item{eval_func_list}{List object containing the functions corresponding to the various evaluations metrics}
 
-\item{case}{The case used to simulate the data}
+\item{number_of_simulations}{The number of simulations to generate data and evaluate the model}
 
-\item{x}{The dependent variable}
+\item{save_path}{The file path to save the results from the simual}
 
-\item{K}{The number of clusters in the data}
-
-\item{curves_per_cluster}{The number of curves per cluster}
-
-\item{initialization_method}{The initialization method for the algorithim}
-
-\item{nbasis}{The number of basis functions}
-
-\item{true_cluster_assignments}{The true cluster assignments}
-
-\item{gamma_dist_config_matrix}{A matrix where the rows are the alpha and parameters for each cluster}
-
-\item{convergence_threshold}{The threshold that determines when the model has converged}
-
-\item{verbose}{A boolean indicating whether or not to print the inner parameters of the model}
-
-\item{draw}{A boolean indicating whether or not to draw the true function vs the}
+\item{data_parms}{List object containing the parameters required for generating the functional data and its characterics}
 }
 \value{
 A matrix with the results of the algorithim for iteration in the simulation for each metric being evaluated over
@@ -46,5 +30,5 @@ A matrix with the results of the algorithim for iteration in the simulation for 
 Runs and evaluates the model on the specified simulated function data
 }
 \examples{
-run_simulations(case, x, K, curves_per_cluster, number_of_simulations, initialization_method, nbasis, true_cluster_assignments, gamma_dist_config_matrix, convergence_threshold, save_path, verbose, draw)
+run_simulations(data_params, model_params, eval_func_list, number_of_simulations, save_path)
 }
