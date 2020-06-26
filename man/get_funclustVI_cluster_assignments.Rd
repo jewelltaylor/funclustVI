@@ -9,9 +9,9 @@ get_funclustVI_cluster_assignments(Y, data_params, model_params)
 \arguments{
 \item{Y}{A matrix in which the rows represent the curves}
 
-\item{model_params}{List object containing the parameters required for model the data and generating the cluster assignments}
+\item{data_params}{List object containing the parameters required for generating the functional data and its characterics}
 
-\item{data_parms}{List object containing the parameters required for generating the functional data and its characterics}
+\item{model_params}{List object containing the parameters required for model the data and generating the cluster assignments}
 }
 \value{
 The cluster assignments generated with the funclustVI model generated with the specified parameters

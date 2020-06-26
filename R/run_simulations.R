@@ -7,7 +7,7 @@ source("R/evaluation_metrics.R")
 
 #' Runs and evaluates the model on the specified simulated function data 
 #'
-#' @param data_parms List object containing the parameters required for generating the functional data and its characterics
+#' @param data_params List object containing the parameters required for generating the functional data and its characterics
 #' @param model_params List object containing the parameters required for model the data and generating the cluster assignments
 #' @param eval_func_list List object containing the functions corresponding to the various evaluations metrics
 #' @param number_of_simulations The number of simulations to generate data and evaluate the model
@@ -36,9 +36,9 @@ run_simulations <- function(data_params, model_params, eval_func_list, number_of
       final_res_mat[simulation_number, i] = curr_val
       eval_metric_sum_vector[i] = prev_sum + curr_val
       eval_func_name = eval_func_name_list[i]
-      cat(eval_func_name, " = ", curr_val)
+      cat(eval_func_name, " = ", curr_val, "\n")
     }
-    cat("\n")
+    
     count = count + 1
   }
   
@@ -47,9 +47,8 @@ run_simulations <- function(data_params, model_params, eval_func_list, number_of
   for(i in 1:num_of_eval_funcs) {
     eval_func_name = eval_func_name_list[i]
     avg_val = eval_metric_avg_vector[i]
-    cat("Average ", eval_func_name, " = ", avg_val)
+    cat("Average ", eval_func_name, " = ", avg_val, "\n")
   }
-  cat("\n")
   
   if(is.null(save_path) == FALSE) {
     write(final_res_mat, save_path)
@@ -61,7 +60,7 @@ run_simulations <- function(data_params, model_params, eval_func_list, number_of
 #' Generates simulated with a certain seed, evaluates the data using the model and returns a list with the results from the various evaluation metrics. 
 #'
 #' @param seed The seed 
-#' @param data_parms List object containing the parameters required for generating the functional data and its characterics
+#' @param data_params List object containing the parameters required for generating the functional data and its characterics
 #' @param model_params List object containing the parameters required for model the data and generating the cluster assignments
 #' @param eval_func_list List object containing the functions corresponding to the various evaluations metrics
 #'
@@ -101,7 +100,7 @@ compute_function <- function(seed, data_params, model_params, eval_func_list) {
 #' Model function wrapper for the funclustVI 
 #'
 #' @param Y A matrix in which the rows represent the curves 
-#' @param data_parms List object containing the parameters required for generating the functional data and its characterics
+#' @param data_params List object containing the parameters required for generating the functional data and its characterics
 #' @param model_params List object containing the parameters required for model the data and generating the cluster assignments
 #' 
 #' @return The cluster assignments generated with the funclustVI model generated with the specified parameters
@@ -117,10 +116,11 @@ get_funclustVI_cluster_assignments <- function(Y, data_params, model_params) {
   nbasis = model_params$nbasis
   convergence_threshold = model_params$convergence_threshold
   gamma_dist_config_matrix = model_params$gamma_dist_config_matrix
+  plot_params = model_params$plot_params
   true_cluster_assignments = data_params$true_cluster_assignments
   verbose = model_params$verbose 
   draw = model_params$draw
-  clf = funcslustVI(Y, x, K, init, nbasis, convergence_threshold, gamma_dist_config_matrix, true_cluster_assignments, verbose, draw)
+  clf = funcslustVI(Y, x, K, init, nbasis, convergence_threshold, gamma_dist_config_matrix, true_cluster_assignments, verbose, draw, plot_params)
   cluster_assignments = clf$cluster_assignments
   return(cluster_assignments)
 }
@@ -153,7 +153,7 @@ get_mismatches <- function(cluster_assignments, data_params) {
 #'
 #' @return The vmeasure
 #' 
-#' @export
+#' @export 
 #'
 #' @examples get_v_measure(cluster_assignments, K, curves_per_cluster)
 
@@ -162,5 +162,7 @@ get_v_measure <- function(cluster_assignments, data_params) {
   v_measure = sabre::vmeasure(cluster_assignments, true_cluster_assignments)$v_measure
   return(v_measure)
 }
+
+
 
 

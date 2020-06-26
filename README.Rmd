@@ -39,8 +39,12 @@ devtools::install_github("jewelltaylor/funclustVI")
 
 This is an example which shows you how to use the package to generate cluster assignments from functional data.
 
-```{r example}
+```{r example_1}
+#Import the funclustVI library  
 library(funclustVI)
+
+#Data Arguments
+
 
 # Model Arguments 
 x = seq(from=0,to=pi/3, length = 100)
@@ -59,8 +63,9 @@ gamma_dist_config_matrix[2, ] = c(12.5, 12.5, 12.5) * 100
 convergence_threshold = 1
 verbose = FALSE
 draw = FALSE
+plot_params = c(1, 6)
 
-model = funcslustVI(Y, x, K, init, nbasis, convergence_threshold, gamma_dist_config_matrix, true_cluster_assignments, verbose, draw)
+model = funcslustVI(Y, x, K, init, nbasis, convergence_threshold, gamma_dist_config_matrix, true_cluster_assignments, verbose, draw, plot_params)
 
 cluster_assignemnts = model$cluster_assignments
 
@@ -68,6 +73,56 @@ print(cluster_assignemnts)
 
 
 
+
+
+```
+
+This is an example which shows how to use the funclustVI package to cluster real data including in the package. The data corresponds to the daily tempuratures in Vancouver and Toronto over the month of July over the 10 year period 1994 to 2003. 
+
+``` {r example_2_data, echo=FALSE, results='hide', message=FALSE}
+
+res_temp = as.vector(weathercan::weather_dl(station_ids = 1776, start = "1994-01-01", end = "2003-12-31", interval = "day")$max_temp)
+tor_temp = as.vector(weathercan::weather_dl(station_ids = 5051, start = "1994-01-01", end = "2003-12-31", interval = "day")$max_temp)
+
+cl = matrix(0, 18, 31)
+count = 1
+for (i in seq(1, 3285, 365)) {
+  upperbound1 = i + 364
+  res_temp_curr = tidyr::replace_na(res_temp[i:upperbound1], 0)[187:217]
+  cl[count, ] = res_temp_curr
+  
+  count = count + 1
+}
+
+for (j in seq(1, 3285, 365)) {
+  upperbound2 = j + 364
+  tor_temp_curr = tidyr::replace_na(tor_temp[j:upperbound2], 0)[187:217]
+  cl[count, ] = tor_temp_curr
+  count = count + 1
+}
+
+
+
+
+dataset = cl
+
+```
+
+``` {r example_2}
+x = seq(1:31)
+curves_per_cluster = 9
+K = 2
+nbasis = 10 
+init = "km"
+nbasis = 10
+convergence_threshold = 1
+gamma_dist_config_matrix = NULL 
+true_cluster_assignments = rep(1:K,each = curves_per_cluster)
+verbose = FALSE
+draw = TRUE
+plot_params = c(3, 40)
+
+model = funcslustVI(dataset, x, K, init, nbasis, convergence_threshold, gamma_dist_config_matrix, true_cluster_assignments, verbose, draw, plot_params)
 
 
 ```
@@ -110,6 +165,7 @@ model_params$convergence_threshold = convergence_threshold
 model_params$save_path = save_path
 model_params$verbose = verbose
 model_params$draw = draw
+model_params$plot_params = c(1, 6)
 
 eval_func_list$mismatch = get_mismatches
 eval_func_list$vmeasure = get_v_measure
@@ -117,4 +173,5 @@ eval_func_list$vmeasure = get_v_measure
 eval_func_param_list = NULL
 
 run_simulations(data_params, model_params, eval_func_list, number_of_simulations, save_path)
+
 ```

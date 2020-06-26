@@ -9,10 +9,10 @@
 #'
 #' @examples plot_data(x, Y, K, nbasis, m_list, true_m_not)
 
-plot_data <- function(x, B, m_list, true_m_not) {
+plot_data <- function(x, B, m_list, true_m_not, plot_params) {
   number_of_clusters = NROW(true_m_not)
   
-  plot(x, B %*% true_m_not[1, ], col=1, lwd=2, type="l", ylim=c(1, 6), main="Plot", ylab="f(x)", xlab="x")
+  plot(x, B %*% true_m_not[1, ], col=1, lwd=2, type="l", ylim=plot_params, main="Plot", ylab="f(x)", xlab="x")
   lines(x, B %*% t(m_list[[1]]), col=2, lwd=2)
   
   for (i in 2:number_of_clusters) {

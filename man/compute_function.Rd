@@ -9,11 +9,11 @@ compute_function(seed, data_params, model_params, eval_func_list)
 \arguments{
 \item{seed}{The seed}
 
+\item{data_params}{List object containing the parameters required for generating the functional data and its characterics}
+
 \item{model_params}{List object containing the parameters required for model the data and generating the cluster assignments}
 
 \item{eval_func_list}{List object containing the functions corresponding to the various evaluations metrics}
-
-\item{data_parms}{List object containing the parameters required for generating the functional data and its characterics}
 }
 \value{
 A list with the accuracy metrics as indexes

@@ -13,6 +13,8 @@ run_simulations(
 )
 }
 \arguments{
+\item{data_params}{List object containing the parameters required for generating the functional data and its characterics}
+
 \item{model_params}{List object containing the parameters required for model the data and generating the cluster assignments}
 
 \item{eval_func_list}{List object containing the functions corresponding to the various evaluations metrics}
@@ -20,8 +22,6 @@ run_simulations(
 \item{number_of_simulations}{The number of simulations to generate data and evaluate the model}
 
 \item{save_path}{The file path to save the results from the simual}
-
-\item{data_parms}{List object containing the parameters required for generating the functional data and its characterics}
 }
 \value{
 A matrix with the results of the algorithim for iteration in the simulation for each metric being evaluated over

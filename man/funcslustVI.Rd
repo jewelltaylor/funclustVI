@@ -14,7 +14,8 @@ funcslustVI(
   gamma_dist_config_matrix,
   true_cluster_assignments,
   verbose,
-  draw
+  draw,
+  plot_params
 )
 }
 \arguments{

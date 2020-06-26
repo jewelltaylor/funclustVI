@@ -35,7 +35,11 @@ This is an example which shows you how to use the package to generate
 cluster assignments from functional data.
 
 ``` r
+#Import the funclustVI library  
 library(funclustVI)
+
+#Data Arguments
+
 
 # Model Arguments 
 x = seq(from=0,to=pi/3, length = 100)
@@ -54,14 +58,39 @@ gamma_dist_config_matrix[2, ] = c(12.5, 12.5, 12.5) * 100
 convergence_threshold = 1
 verbose = FALSE
 draw = FALSE
+plot_params = c(1, 6)
 
-model = funcslustVI(Y, x, K, init, nbasis, convergence_threshold, gamma_dist_config_matrix, true_cluster_assignments, verbose, draw)
+model = funcslustVI(Y, x, K, init, nbasis, convergence_threshold, gamma_dist_config_matrix, true_cluster_assignments, verbose, draw, plot_params)
 
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 3 3 3 2 3 3 2 3 3 3 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2
+#>  [1] 3 2 2 2 3 2 2 2 2 2 1 1 3 1 1 3 3 1 3 1 2 2 2 2 2 2 2 2 2 2
 ```
+
+This is an example which shows how to use the funclustVI package to
+cluster real data including in the package. The data corresponds to the
+daily tempuratures in Vancouver and Toronto over the month of July over
+the 10 year period 1994 to 2003.
+
+``` r
+x = seq(1:31)
+curves_per_cluster = 9
+K = 2
+nbasis = 10 
+init = "km"
+nbasis = 10
+convergence_threshold = 1
+gamma_dist_config_matrix = NULL 
+true_cluster_assignments = rep(1:K,each = curves_per_cluster)
+verbose = FALSE
+draw = TRUE
+plot_params = c(3, 40)
+
+model = funcslustVI(dataset, x, K, init, nbasis, convergence_threshold, gamma_dist_config_matrix, true_cluster_assignments, verbose, draw, plot_params)
+```
+
+<img src="man/figures/README-example_2-1.png" width="100%" />
 
 This is an example which shows how to run simulations. Since draw =
 True, a plot is generated showing the true vs estimated functions.
@@ -102,6 +131,7 @@ model_params$convergence_threshold = convergence_threshold
 model_params$save_path = save_path
 model_params$verbose = verbose
 model_params$draw = draw
+model_params$plot_params = c(1, 6)
 
 eval_func_list$mismatch = get_mismatches
 eval_func_list$vmeasure = get_v_measure
@@ -113,7 +143,9 @@ run_simulations(data_params, model_params, eval_func_list, number_of_simulations
 
 <img src="man/figures/README-simulation_plot-1.png" width="100%" />
 
-    #> mismatch  =  5vmeasure  =  0.8996935
-    #> Average  mismatch  =  5Average  vmeasure  =  0.8996935
+    #> mismatch  =  5 
+    #> vmeasure  =  0.8996935 
+    #> Average  mismatch  =  5 
+    #> Average  vmeasure  =  0.8996935
     #>      [,1]      [,2]
     #> [1,]    5 0.8996935

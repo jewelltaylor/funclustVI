@@ -4,7 +4,7 @@
 \alias{plot_data}
 \title{Generates a plot with the true vs predicted curves}
 \usage{
-plot_data(x, B, m_list, true_m_not)
+plot_data(x, B, m_list, true_m_not, plot_params)
 }
 \arguments{
 \item{x}{The dependent variable}
