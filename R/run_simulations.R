@@ -10,17 +10,18 @@ source("R/evaluation_metrics.R")
 #' @param data_params List object containing the parameters required for generating the functional data and its characterics
 #' @param model_params List object containing the parameters required for model the data and generating the cluster assignments
 #' @param eval_func_list List object containing the functions corresponding to the various evaluations metrics
-#' @param number_of_simulations The number of simulations to generate data and evaluate the model
-#' @param save_path The file path to save the results from the simual
+#' @param number_of_simulations The number of simulations 
+#' @param save_path The file path to save the results from the simulations 
 #'
 #' @return A matrix with the results of the algorithim for iteration in the simulation for each metric being evaluated over
 #' 
 #' @export
 #'
-#' @examples run_simulations(data_params, model_params, eval_func_list, number_of_simulations, save_path)
+#' @examples simulate(data_params, model_params, eval_func_list, number_of_simulations, save_path)
 
 
-run_simulations <- function(data_params, model_params, eval_func_list, number_of_simulations, save_path) {
+simulate <- function(data_params, model_params, eval_func_list, number_of_simulations, save_path) {
+  start_time = Sys.time()
   num_of_eval_funcs = length(eval_func_list)
   eval_func_name_list = names(eval_func_list)
   eval_metric_sum_vector = c(1:num_of_eval_funcs)*0 
@@ -54,7 +55,12 @@ run_simulations <- function(data_params, model_params, eval_func_list, number_of
     write(final_res_mat, save_path)
   }
   
-  return(final_res_mat)
+  end_time = Sys.time()
+  
+  simulation_length = end_time - start_time 
+  
+  result_list = list("result_matrix" = final_res_mat, "simulation_length" = simulation_length)
+  return(result_list)
 }
 
 #' Generates simulated with a certain seed, evaluates the data using the model and returns a list with the results from the various evaluation metrics. 
@@ -120,7 +126,7 @@ get_funclustVI_cluster_assignments <- function(Y, data_params, model_params) {
   true_cluster_assignments = data_params$true_cluster_assignments
   verbose = model_params$verbose 
   draw = model_params$draw
-  clf = funcslustVI(Y, x, K, init, nbasis, convergence_threshold, gamma_dist_config_matrix, true_cluster_assignments, verbose, draw, plot_params)
+  clf = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, gamma_dist_config_matrix, verbose, draw, plot_params)
   cluster_assignments = clf$cluster_assignments
   return(cluster_assignments)
 }

@@ -19,9 +19,9 @@ source("R/plot.R")
 #' 
 #' @export
 #'
-#' @examples fit(Y, x, K, init, nbasis, convergence_threshold, gamma_dist_config_matrix, true_cluster_assignments, verbose, draw)
+#' @examples fit(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, gamma_dist_config_matrix, verbose, draw, plot_params)
 
-funcslustVI <- function(Y, x, K, init, nbasis, convergence_threshold, gamma_dist_config_matrix, true_cluster_assignments, verbose, draw, plot_params) {
+funcslustVI <- function(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, gamma_dist_config_matrix, verbose, draw, plot_params) {
   probability_matrix = NULL
   
   if (init == 'hcl') {
@@ -34,7 +34,8 @@ funcslustVI <- function(Y, x, K, init, nbasis, convergence_threshold, gamma_dist
     probability_matrix = get_approx_probability_matrix_km(Y, K, x)
   }
   
-  i_p = probability_matrix
+  init_cluster_assignments = get_final_cluster_assignments(probability_matrix) 
+  
   tau_list = get_tau_list(Y, probability_matrix, K)
   
   if (draw == TRUE & is.null(true_cluster_assignments) == FALSE) {
@@ -100,7 +101,7 @@ funcslustVI <- function(Y, x, K, init, nbasis, convergence_threshold, gamma_dist
     }
   }
   cluster_assignments = get_final_cluster_assignments(probability_matrix)
-  result_list = list("probability_matrix" = probability_matrix, "cluster_assignments" = cluster_assignments, "m_list" = m_list, "i_p" = i_p)
+  result_list = list("probability_matrix" = probability_matrix, "cluster_assignments" = cluster_assignments, "init_cluster_assignments" = init_cluster_assignments)
   
   if (draw == TRUE & is.null(true_cluster_assignments) == FALSE) {
     plot_data(x, B, m_list, true_m_not, plot_params)
