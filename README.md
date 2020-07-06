@@ -41,16 +41,16 @@ variational inference based approach.
 
 #### Arguments
 
-  - **x**: A vector of values which the functional data is evaluated
+  - **x**: A vector of values in which the functional data is evaluated
     over
-  - **Y**: A matrix in which each row represents a curve
+  - **Y**: A matrix where each row represents a curve
   - **K**: The number of clusters
   - **true\_cluster\_assignments**: The actual cluster assignments for
     each curve
   - **init**: The initialization method for the cluster assignments
   - **nbasis**: The number of basis functions
   - **convergence\_threshold**: The threshold that determines when the
-    model has converged. (Optional)
+    model has converged
   - **gamma\_dist\_config\_matrix**: A matrix in which the first row is
     the alpha parameters for each cluster and the second row is the beta
     parameters for each cluster.
@@ -61,12 +61,12 @@ variational inference based approach.
   - **plot\_params**: List of parameters corresponding to
     characteristics of the plot
 
-### Return Value
+#### Return Value
 
 The funclustVI function returns a list with the following entries:
 
   - **probability\_matrix**: A matrix in which the columns are the
-    probabilities that the curve belongs to that cluster
+    probabilities that the curves belong to that cluster
   - **cluster\_assignments**: A vector of intergers that represent the
     cluster assignment for each curve
   - **init\_cluster\_assignments**: The cluster assignments provided
@@ -99,7 +99,7 @@ The simulate function returns a list with the following entries:
     the evaluation metric for each simulation in the simulations
   - **simulation\_length**: The length of the simuations in seconds
 
-## Example
+## Examples
 
 This is an example which shows you how to use the package to generate
 cluster assignments from functional data.
@@ -138,7 +138,7 @@ model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 3 3 3 3 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1 1 2 2 2 3 2 2 3 3 2 3
+#>  [1] 3 3 3 3 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2
 ```
 
 This is an example which shows how to use the funclustVI package to
@@ -238,4 +238,4 @@ simulate(data_params, model_params, eval_func_list, number_of_simulations, save_
     #> [1,]    5 0.8996935
     #> 
     #> $simulation_length
-    #> Time difference of 4.35682 secs
+    #> Time difference of 4.069916 secs

@@ -43,22 +43,22 @@ The funclustVI package offers two main functions: funclustVI and simulate.
 The funclustVI function clusters functional data using a novel variational inference based approach. 
 
 #### Arguments 
-* **x**: A vector of values which the functional data is evaluated over
-* **Y**: A matrix in which each row represents a curve 
+* **x**: A vector of values in which the functional data is evaluated over
+* **Y**: A matrix where each row represents a curve 
 * **K**: The number of clusters 
 * **true_cluster_assignments**: The actual cluster assignments for each curve 
 * **init**: The initialization method for the cluster assignments 
 * **nbasis**: The number of basis functions 
-* **convergence_threshold**: The threshold that determines when the model has converged. (Optional)
+* **convergence_threshold**: The threshold that determines when the model has converged 
 * **gamma_dist_config_matrix**: A matrix in which the first row is the alpha parameters for each cluster and the second row is the beta parameters for each cluster. 
 * **verbose**: Parameter that determines whether or not to log output regarding model hyperparameters 
 * **draw**: Parameter that determines whether or not to plot the real vs estimated curves after fitting the model 
 * **plot_params**: List of parameters corresponding to characteristics of the plot
 
-### Return Value 
+#### Return Value 
 The funclustVI function returns a list with the following entries:
 
-* **probability_matrix**: A matrix in which the columns are the probabilities that the curve belongs to that cluster
+* **probability_matrix**: A matrix in which the columns are the probabilities that the curves belong to that cluster
 * **cluster_assignments**: A vector of intergers that represent the cluster assignment for each curve 
 * **init_cluster_assignments**: The cluster assignments provided using the specified initlization method 
 
@@ -78,7 +78,7 @@ The simulate function returns a list with the following entries:
 * **result_matrix**: The result matrix contains the values of each of the evaluation metric for each simulation in the simulations 
 * **simulation_length**: The length of the simuations in seconds
 
-## Example
+## Examples
 
 This is an example which shows you how to use the package to generate cluster assignments from functional data.
 

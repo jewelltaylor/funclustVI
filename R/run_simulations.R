@@ -59,7 +59,7 @@ simulate <- function(data_params, model_params, eval_func_list, number_of_simula
   
   simulation_length = end_time - start_time 
   
-  result_list = list("result_matrix" = final_res_mat, "simulation_length" = simulation_length)
+  result_list = list("result_matrix" = final_res_mat, "simulation_length" = simulation_length, "eval_metric_avg_vector" = eval_metric_avg_vector)
   return(result_list)
 }
 
