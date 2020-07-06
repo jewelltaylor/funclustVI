@@ -122,6 +122,7 @@ true_cluster_assignments = rep(1:K,each = curves_per_cluster)
 init = "km"
 nbasis = 6
 convergence_threshold = 1
+max_iterations = 10 
 gamma_dist_config_matrix = matrix(0, 2, K)
 gamma_dist_config_matrix[1, ] = c(78.125, 78.125, 78.125) * 100
 gamma_dist_config_matrix[2, ] = c(12.5, 12.5, 12.5) * 100
@@ -132,13 +133,13 @@ plot_params$xlim = NULL
 plot_params$ylim = c(1, 6)
 
 #Fit the model
-model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, gamma_dist_config_matrix, verbose, draw, plot_params)
+model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, max_iterations, gamma_dist_config_matrix, verbose, draw, plot_params)
 
 #Get the cluster assignments
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 3 3 3 3 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2
+#>  [1] 1 1 2 1 1 1 2 1 1 1 3 3 3 3 3 3 3 3 3 3 2 2 2 2 2 2 2 2 2 2
 ```
 
 This is an example which shows how to use the funclustVI package to
@@ -158,6 +159,7 @@ true_cluster_assignments = rep(1:K,each = curves_per_cluster)
 init = "km"
 nbasis = 10 
 convergence_threshold = 1
+max_iterations = 10 
 gamma_dist_config_matrix = NULL 
 verbose = FALSE
 draw = TRUE
@@ -166,7 +168,7 @@ plot_params$xlim = NULL
 plot_params$ylim = c(3, 40)
 
 #Fit the model 
-model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, gamma_dist_config_matrix, verbose, draw, plot_params)
+model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, max_iterations, gamma_dist_config_matrix, verbose, draw, plot_params)
 ```
 
 <img src="man/figures/README-example_2-1.png" width="100%" />
@@ -200,6 +202,7 @@ gamma_dist_config_matrix = matrix(0, 2, K)
 gamma_dist_config_matrix[1, ] = c(78.125, 78.125, 78.125) * 100
 gamma_dist_config_matrix[2, ] = c(12.5, 12.5, 12.5) * 100
 convergence_threshold = 1
+max_iterations = 10
 verbose = FALSE
 draw = TRUE
 
@@ -210,6 +213,7 @@ model_params$init = "km"
 model_params$nbasis = 6
 model_params$gamma_dist_config_matrix = gamma_dist_config_matrix
 model_params$convergence_threshold = convergence_threshold
+model_params$max_iterations = max_iterations 
 model_params$save_path = save_path
 model_params$verbose = verbose
 model_params$draw = draw
@@ -238,4 +242,7 @@ simulate(data_params, model_params, eval_func_list, number_of_simulations, save_
     #> [1,]    5 0.8996935
     #> 
     #> $simulation_length
-    #> Time difference of 4.069916 secs
+    #> Time difference of 5.029093 secs
+    #> 
+    #> $eval_metric_avg_vector
+    #> [1] 5.0000000 0.8996935

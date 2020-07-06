@@ -121,12 +121,13 @@ get_funclustVI_cluster_assignments <- function(Y, data_params, model_params) {
   init = model_params$init
   nbasis = model_params$nbasis
   convergence_threshold = model_params$convergence_threshold
+  max_iterations = model_params$max_iterations
   gamma_dist_config_matrix = model_params$gamma_dist_config_matrix
   plot_params = model_params$plot_params
   true_cluster_assignments = data_params$true_cluster_assignments
   verbose = model_params$verbose 
   draw = model_params$draw
-  clf = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, gamma_dist_config_matrix, verbose, draw, plot_params)
+  clf = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, max_iterations, gamma_dist_config_matrix, verbose, draw, plot_params)
   cluster_assignments = clf$cluster_assignments
   return(cluster_assignments)
 }

@@ -21,7 +21,7 @@ source("R/plot.R")
 #'
 #' @examples fit(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, gamma_dist_config_matrix, verbose, draw, plot_params)
 
-funcslustVI <- function(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, gamma_dist_config_matrix, verbose, draw, plot_params) {
+funcslustVI <- function(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, max_iterations, gamma_dist_config_matrix, verbose, draw, plot_params) {
   probability_matrix = NULL
   
   if (init == 'hcl') {
@@ -73,7 +73,7 @@ funcslustVI <- function(x, Y, K, true_cluster_assignments, init, nbasis, converg
   converged = FALSE
   prev_elbo = NULL
   iteration = 0
-  while (converged == FALSE) {
+  while (converged == FALSE || iteration > max_iterations) {
     iteration = iteration + 0
     sigma_list = update_sigma_list(Y, phi_matrix, K, A_vector, R_vector, probability_matrix, x, nbasis)
     m_list = update_m_list(Y, m_not_vector, phi_matrix, K, A_vector, R_vector, probability_matrix, x, nbasis, sigma_list)

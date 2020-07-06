@@ -12,6 +12,7 @@ funcslustVI(
   init,
   nbasis,
   convergence_threshold,
+  max_iterations,
   gamma_dist_config_matrix,
   verbose,
   draw,
