@@ -29,7 +29,8 @@ simulate <- function(data_params, model_params, eval_func_list, number_of_simula
   
   count = 0
   for (simulation_number in 1:number_of_simulations) {
-    res = compute_function(simulation_number, data_params, model_params, eval_func_list)
+    seed = data_params$seeds[simulation_number]
+    res = compute_function(seed, data_params, model_params, eval_func_list)
     
     for (i in 1:num_of_eval_funcs) {
       prev_sum = eval_metric_sum_vector[i]

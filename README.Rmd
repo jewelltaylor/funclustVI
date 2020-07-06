@@ -182,6 +182,7 @@ x = seq(from=0,to=pi/3, length = 100)
 K = 3
 curves_per_cluster = 50 
 true_cluster_assignments = rep(1:K,each = curves_per_cluster)
+seeds = c(1)
 
 #Pack into data parameter list
 data_params = list()
@@ -189,6 +190,7 @@ data_params$x = x
 data_params$K = K
 data_params$curves_per_cluster = curves_per_cluster
 data_params$true_cluster_assignments = true_cluster_assignments
+data_params$seeds = seeds 
 data_params$generate_data = Case_7
 
 #Model Parameters

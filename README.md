@@ -139,7 +139,7 @@ model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 1 1 2 1 1 1 2 1 1 1 3 3 3 3 3 3 3 3 3 3 2 2 2 2 2 2 2 2 2 2
+#>  [1] 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 3 3 3 3 3 3 3 2 2 3
 ```
 
 This is an example which shows how to use the funclustVI package to
@@ -186,6 +186,7 @@ x = seq(from=0,to=pi/3, length = 100)
 K = 3
 curves_per_cluster = 50 
 true_cluster_assignments = rep(1:K,each = curves_per_cluster)
+seeds = c(1)
 
 #Pack into data parameter list
 data_params = list()
@@ -193,6 +194,7 @@ data_params$x = x
 data_params$K = K
 data_params$curves_per_cluster = curves_per_cluster
 data_params$true_cluster_assignments = true_cluster_assignments
+data_params$seeds = seeds 
 data_params$generate_data = Case_7
 
 #Model Parameters
@@ -242,7 +244,7 @@ simulate(data_params, model_params, eval_func_list, number_of_simulations, save_
     #> [1,]    5 0.8996935
     #> 
     #> $simulation_length
-    #> Time difference of 5.029093 secs
+    #> Time difference of 3.9641 secs
     #> 
     #> $eval_metric_avg_vector
     #> [1] 5.0000000 0.8996935
