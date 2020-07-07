@@ -233,5 +233,4 @@ eval_func_list$vmeasure = get_v_measure
 
 #Run the simulations
 simulate(data_params, model_params, eval_func_list, number_of_simulations, save_path)
-
 ```

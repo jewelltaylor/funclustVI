@@ -15,19 +15,31 @@ plot_data <- function(x, Y, B, m_list, true_m_not, true_cluster_assignments, plo
   xlim = plot_params$xlim 
   show_curves = plot_params$show_curves 
   
-  plot(x, B %*% true_m_not[1, ], col=1, lwd=2, type="l", ylim=ylim, xlim=xlim, main="Plot", ylab="f(x)", xlab="x")
-  lines(x, B %*% t(m_list[[1]]), col=2, lwd=2)
-  
-  for (i in 2:number_of_clusters) {
-    lines(x, B %*% true_m_not[i, ], col=1, lwd=2)
-    lines(x, B %*% t(m_list[[i]]), col=2, lwd=2)
-  }
-  
   if(isTRUE(show_curves) == TRUE) {
-    for(i in 1:NROW(Y)) {
+    cluster_number = true_cluster_assignments[1]
+    col = 2 + cluster_number
+    plot(x, Y[1, ], col=col, type="l", ylim=ylim, xlim=xlim, main="Plot", ylab="f(x)", xlab="x")
+    for(i in 2:NROW(Y)) {
       cluster_number = true_cluster_assignments[i]
       col = 2 + cluster_number
       lines(x, Y[i, ], type="l", col=col)
+    }
+    
+    lines(x, B %*% true_m_not[1, ], col=1, lwd=2)
+    lines(x, B %*% t(m_list[[1]]), col=2, lwd=2)
+    
+    for (i in 2:number_of_clusters) {
+      lines(x, B %*% true_m_not[i, ], col=1, lwd=2)
+      lines(x, B %*% t(m_list[[i]]), col=2, lwd=2)
+    }
+    
+  } else {
+    plot(x, B %*% true_m_not[1, ], col=1, lwd=2, type="l", ylim=ylim, xlim=xlim, main="Plot", ylab="f(x)", xlab="x")
+    lines(x, B %*% t(m_list[[1]]), col=2, lwd=2)
+    
+    for (i in 2:number_of_clusters) {
+      lines(x, B %*% true_m_not[i, ], col=1, lwd=2)
+      lines(x, B %*% t(m_list[[i]]), col=2, lwd=2)
     }
   }
   
