@@ -54,7 +54,7 @@ The funclustVI function clusters functional data using a novel variational infer
 * **gamma_dist_config_matrix**: A matrix in which the first row is the alpha parameters for each cluster and the second row is the beta parameters for each cluster. 
 * **verbose**: Parameter that determines whether or not to log output regarding model hyperparameters 
 * **draw**: Parameter that determines whether or not to plot the real vs estimated curves after fitting the model 
-* **plot_params**: List of parameters corresponding to characteristics of the plot. Must include vectors xlim and ylim corresponding to the x and y limits of the plot. 
+* **plot_params**: List of parameters corresponding to characteristics of the plot. Must include vectors xlim and ylim corresponding to the x and y limits of the plot. If NULL is supplied, plot function defaults are used. Must include boolean show_curves. If true the actual curves are shown with diffent colors. 
 
 #### Return Value 
 The funclustVI function returns a list with the following entries:
@@ -71,7 +71,7 @@ The simulate function generates data, fits a model and evaluates the models pred
 * **model_params**: List object containing the parameters required for modelling the data and generating the cluster assignments. Must include function named model_func that accepts Y, data_params and model_params and returns a vector containing the cluster assignment of each curve. Must also include list plot_params as with the requirements as referenced above. Other then these requirements, anything can be included in the model_params object. 
 * **eval_func_list**: List object containing the functions corresponding to the various evaluations metrics evaluation the performance of the algorithim. Each function must accept a vector cluster_assignments that is generated from the function model_func in the model_params list as well as the data_params object which contains the vector true cluster assignments as referenced above. 
 * **number_of_simulations**: The number of simulations 
-* **save_path**: The file path to save the results from the simualations
+* **save_path**: The file path to save the results from the simualations. If NULL, the results are not saved. 
 
 #### Return Value 
 The simulate function returns a list with the following entries: 
@@ -110,6 +110,7 @@ draw = FALSE
 plot_params = list()
 plot_params$xlim = NULL 
 plot_params$ylim = c(1, 6)
+plot_params$show_curves = FALSE 
 
 #Fit the model
 model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, max_iterations, gamma_dist_config_matrix, verbose, draw, plot_params)
@@ -120,7 +121,7 @@ cluster_assignemnts = model$cluster_assignments
 print(cluster_assignemnts)
 ```
 
-This is an example which shows how to use the funclustVI package to cluster real data including in the package. The data corresponds to the daily tempuratures in Vancouver and Toronto over the month of July over the 10 year period 1994 to 2003. Since draw = Traw a plot is generated showing the true function vs the estimated function for each cluster. Refer to above function definitions  above for detailed requirements. 
+This is an example which shows how to use the funclustVI package to cluster real data including in the package. The data corresponds to the daily tempuratures in Vancouver and Toronto over the month of July over the 10 year period 1994 to 2003. Since draw = Traw a plot is generated showing the true function vs the estimated function for each cluster. Since show_curves is TRUE, the plot includes the actual curves with differing colors. Refer to above function definitions above for detailed requirements. 
 
 ``` {r example_2_data, echo=FALSE, results='hide', message=FALSE}
 
@@ -166,6 +167,7 @@ draw = TRUE
 plot_params = list()
 plot_params$xlim = NULL
 plot_params$ylim = c(3, 40)
+plot_params$show_curves = TRUE
 
 #Fit the model 
 model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, max_iterations, gamma_dist_config_matrix, verbose, draw, plot_params)
@@ -177,8 +179,8 @@ This is an example which shows how to run simulations. Refer to above function d
 library(funclustVI)
 
 #Initializations
-number_of_simulations = 30
-save_path = "~/Desktop/results.csv"
+number_of_simulations = 5
+save_path = NULL
 
 #Data Parameters
 x = seq(from=0,to=pi/3, length = 100)
@@ -221,6 +223,7 @@ model_params$draw = draw
 plot_params = list()
 plot_params$xlim = NULL
 plot_params$ylim = c(1, 6)
+plot_params$show_curves = FALSE 
 model_params$plot_params = plot_params
 
 #Evaluation parameter list 

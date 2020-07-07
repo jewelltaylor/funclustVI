@@ -62,7 +62,10 @@ variational inference based approach.
     vs estimated curves after fitting the model
   - **plot\_params**: List of parameters corresponding to
     characteristics of the plot. Must include vectors xlim and ylim
-    corresponding to the x and y limits of the plot.
+    corresponding to the x and y limits of the plot. If NULL is
+    supplied, plot function defaults are used. Must include boolean
+    show\_curves. If true the actual curves are shown with diffent
+    colors.
 
 #### Return Value
 
@@ -107,7 +110,7 @@ generation, modelling and evaluation parameters specified by the user.
     contains the vector true cluster assignments as referenced above.
   - **number\_of\_simulations**: The number of simulations
   - **save\_path**: The file path to save the results from the
-    simualations
+    simualations. If NULL, the results are not saved.
 
 #### Return Value
 
@@ -150,6 +153,7 @@ draw = FALSE
 plot_params = list()
 plot_params$xlim = NULL 
 plot_params$ylim = c(1, 6)
+plot_params$show_curves = FALSE 
 
 #Fit the model
 model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, max_iterations, gamma_dist_config_matrix, verbose, draw, plot_params)
@@ -158,7 +162,7 @@ model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 1 3 3 3 3 3 3 3 3 3
+#>  [1] 3 3 3 3 3 3 3 3 3 3 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 3
 ```
 
 This is an example which shows how to use the funclustVI package to
@@ -166,7 +170,9 @@ cluster real data including in the package. The data corresponds to the
 daily tempuratures in Vancouver and Toronto over the month of July over
 the 10 year period 1994 to 2003. Since draw = Traw a plot is generated
 showing the true function vs the estimated function for each cluster.
-Refer to above function definitions above for detailed requirements.
+Since show\_curves is TRUE, the plot includes the actual curves with
+differing colors. Refer to above function definitions above for detailed
+requirements.
 
 ``` r
 #Data Parameters
@@ -187,6 +193,7 @@ draw = TRUE
 plot_params = list()
 plot_params$xlim = NULL
 plot_params$ylim = c(3, 40)
+plot_params$show_curves = TRUE
 
 #Fit the model 
 model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, max_iterations, gamma_dist_config_matrix, verbose, draw, plot_params)
@@ -201,8 +208,8 @@ function definitions for detailed requirements.
 library(funclustVI)
 
 #Initializations
-number_of_simulations = 30
-save_path = "~/Desktop/results.csv"
+number_of_simulations = 5
+save_path = NULL
 
 #Data Parameters
 x = seq(from=0,to=pi/3, length = 100)
@@ -245,6 +252,7 @@ model_params$draw = draw
 plot_params = list()
 plot_params$xlim = NULL
 plot_params$ylim = c(1, 6)
+plot_params$show_curves = FALSE 
 model_params$plot_params = plot_params
 
 #Evaluation parameter list 
@@ -259,69 +267,19 @@ simulate(data_params, model_params, eval_func_list, number_of_simulations, save_
 #> seed  3 : mismatch  =  3  vmeasure  =  0.9192316  
 #> seed  4 : mismatch  =  8  vmeasure  =  0.8322171  
 #> seed  5 : mismatch  =  6  vmeasure  =  0.8641855  
-#> seed  6 : mismatch  =  8  vmeasure  =  0.8365829  
-#> seed  7 : mismatch  =  3  vmeasure  =  0.9305507  
-#> seed  8 : mismatch  =  5  vmeasure  =  0.8996935  
-#> seed  9 : mismatch  =  6  vmeasure  =  0.8862312  
-#> seed  10 : mismatch  =  1  vmeasure  =  0.9701912  
-#> seed  11 : mismatch  =  3  vmeasure  =  0.9305507  
-#> seed  12 : mismatch  =  5  vmeasure  =  0.8850621  
-#> seed  13 : mismatch  =  5  vmeasure  =  0.8996935  
-#> seed  14 : mismatch  =  6  vmeasure  =  0.8641855  
-#> seed  15 : mismatch  =  6  vmeasure  =  0.8705214  
-#> seed  16 : mismatch  =  6  vmeasure  =  0.8862312  
-#> seed  17 : mismatch  =  6  vmeasure  =  0.8622702  
-#> seed  18 : mismatch  =  7  vmeasure  =  0.8497806  
-#> seed  19 : mismatch  =  2  vmeasure  =  0.9487883  
-#> seed  20 : mismatch  =  13  vmeasure  =  0.7831589  
-#> seed  21 : mismatch  =  2  vmeasure  =  0.9405073  
-#> seed  22 : mismatch  =  2  vmeasure  =  0.9487883  
-#> seed  23 : mismatch  =  3  vmeasure  =  0.9192316  
-#> seed  24 : mismatch  =  2  vmeasure  =  0.9487883  
-#> seed  25 : mismatch  =  0  vmeasure  =  1  
-#> seed  26 : mismatch  =  2  vmeasure  =  0.9405073  
-#> seed  27 : mismatch  =  4  vmeasure  =  0.9011219  
-#> seed  28 : mismatch  =  12  vmeasure  =  0.8030704  
-#> seed  29 : mismatch  =  3  vmeasure  =  0.9305507  
-#> seed  30 : mismatch  =  10  vmeasure  =  0.8226345  
-#> Average  mismatch  =  4.933333 
-#> Average  vmeasure  =  0.8958381
+#> Average  mismatch  =  5.2 
+#> Average  vmeasure  =  0.8832899
 #> $result_matrix
-#>       [,1]      [,2]
-#>  [1,]    5 0.8996935
-#>  [2,]    4 0.9011219
-#>  [3,]    3 0.9192316
-#>  [4,]    8 0.8322171
-#>  [5,]    6 0.8641855
-#>  [6,]    8 0.8365829
-#>  [7,]    3 0.9305507
-#>  [8,]    5 0.8996935
-#>  [9,]    6 0.8862312
-#> [10,]    1 0.9701912
-#> [11,]    3 0.9305507
-#> [12,]    5 0.8850621
-#> [13,]    5 0.8996935
-#> [14,]    6 0.8641855
-#> [15,]    6 0.8705214
-#> [16,]    6 0.8862312
-#> [17,]    6 0.8622702
-#> [18,]    7 0.8497806
-#> [19,]    2 0.9487883
-#> [20,]   13 0.7831589
-#> [21,]    2 0.9405073
-#> [22,]    2 0.9487883
-#> [23,]    3 0.9192316
-#> [24,]    2 0.9487883
-#> [25,]    0 1.0000000
-#> [26,]    2 0.9405073
-#> [27,]    4 0.9011219
-#> [28,]   12 0.8030704
-#> [29,]    3 0.9305507
-#> [30,]   10 0.8226345
+#>      [,1]      [,2]
+#> [1,]    5 0.8996935
+#> [2,]    4 0.9011219
+#> [3,]    3 0.9192316
+#> [4,]    8 0.8322171
+#> [5,]    6 0.8641855
 #> 
 #> $simulation_length
-#> Time difference of 3.030097 mins
+#> Time difference of 35.3349 secs
 #> 
 #> $eval_metric_avg_vector
-#> [1] 4.9333333 0.8958381
+#> [1] 5.2000000 0.8832899
 ```

@@ -107,7 +107,7 @@ funcslustVI <- function(x, Y, K, true_cluster_assignments, init, nbasis, converg
   result_list = list("probability_matrix" = probability_matrix, "cluster_assignments" = cluster_assignments, "init_cluster_assignments" = init_cluster_assignments)
   
   if (draw == TRUE & is.null(true_cluster_assignments) == FALSE) {
-    plot_data(x, B, m_list, true_m_not, plot_params)
+    plot_data(x, Y, B, m_list, true_m_not, true_cluster_assignments, plot_params)
   }
   
   return(result_list)

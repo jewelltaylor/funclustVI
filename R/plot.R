@@ -9,12 +9,13 @@
 #'
 #' @examples plot_data(x, Y, K, nbasis, m_list, true_m_not)
 
-plot_data <- function(x, B, m_list, true_m_not, plot_params) {
+plot_data <- function(x, Y, B, m_list, true_m_not, true_cluster_assignments, plot_params) {
   number_of_clusters = NROW(true_m_not)
   ylim = plot_params$ylim
   xlim = plot_params$xlim 
+  show_curves = plot_params$show_curves 
   
-  plot(x, B %*% true_m_not[1, ], col=1, lwd=2, type="l", ,ylim=ylim, xlim=xlim, main="Plot", ylab="f(x)", xlab="x")
+  plot(x, B %*% true_m_not[1, ], col=1, lwd=2, type="l", ylim=ylim, xlim=xlim, main="Plot", ylab="f(x)", xlab="x")
   lines(x, B %*% t(m_list[[1]]), col=2, lwd=2)
   
   for (i in 2:number_of_clusters) {
@@ -22,5 +23,13 @@ plot_data <- function(x, B, m_list, true_m_not, plot_params) {
     lines(x, B %*% t(m_list[[i]]), col=2, lwd=2)
   }
   
-  legend(x= "topleft", y=0.92, legend=c("True Function", "Estimated Function"), col=c("black", "red"), lty=c(1,1,1))
+  if(isTRUE(show_curves) == TRUE) {
+    for(i in 1:NROW(Y)) {
+      cluster_number = true_cluster_assignments[i]
+      col = 2 + cluster_number
+      lines(x, Y[i, ], type="l", col=col)
+    }
+  }
+  
+  legend(x= "topleft", y=0.92, legend=c("True Function", "Estimated Function", "Actual Curves"), col=c("black", "red", "grey"), lty=c(1,1,1))
 }

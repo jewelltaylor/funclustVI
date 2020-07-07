@@ -4,16 +4,16 @@
 \alias{plot_data}
 \title{Generates a plot with the true vs predicted curves}
 \usage{
-plot_data(x, B, m_list, true_m_not, plot_params)
+plot_data(x, Y, B, m_list, true_m_not, true_cluster_assignments, plot_params)
 }
 \arguments{
 \item{x}{The dependent variable}
 
+\item{Y}{A matrix in which the rows represent the curves}
+
 \item{m_list}{A list of the updated m parameters for each cluster}
 
 \item{true_m_not}{A matrix containing the true m_not vectors for each cluster}
-
-\item{Y}{A matrix in which the rows represent the curves}
 
 \item{K}{The number of clusters in the data}
 
