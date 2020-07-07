@@ -22,5 +22,5 @@ plot_data <- function(x, B, m_list, true_m_not, plot_params) {
     lines(x, B %*% t(m_list[[i]]), col=2, lwd=2)
   }
   
-  legend(1, 95, legend=c("True Function", "Estimated Function"), col=c("red", "blue"))
+  legend(x= "topleft", y=0.92, legend=c("True Function", "Estimated Function"), col=c("black", "red"), lty=c(1,1,1))
 }

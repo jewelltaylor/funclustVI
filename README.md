@@ -25,7 +25,7 @@ install.packages("funclustVI")
 And the development version from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
+ install.packages("devtools")
 devtools::install_github("jewelltaylor/funclustVI")
 ```
 
@@ -61,7 +61,8 @@ variational inference based approach.
   - **draw**: Parameter that determines whether or not to plot the real
     vs estimated curves after fitting the model
   - **plot\_params**: List of parameters corresponding to
-    characteristics of the plot
+    characteristics of the plot. Must include vectors xlim and ylim
+    corresponding to the x and y limits of the plot.
 
 #### Return Value
 
@@ -84,19 +85,27 @@ generation, modelling and evaluation parameters specified by the user.
 
   - **data\_params**: List object containing the parameters required for
     generating the functional data and its characterics. Must include
-    function named generate\_data that acception the data params list
-    and returns a matrix of curves in the rows. Other then this
-    requirement, anything can be included in the data\_params object.
+    function named generate\_data that accepts the data params list and
+    returns a matrix of curves in the rows. Must also include vector
+    named true\_cluster\_assignments that contains the actual cluster
+    assignments for each curve. Must also include vector named seeds
+    that contains seeds the seed for each iteration of the simulation.
+    Other then these requirements, anything can be included in the
+    data\_params object.
   - **model\_params**: List object containing the parameters required
     for modelling the data and generating the cluster assignments. Must
     include function named model\_func that accepts Y, data\_params and
     model\_params and returns a vector containing the cluster assignment
-    of each curve. Other then this requirement, anything can be included
-    in the model\_params object.
+    of each curve. Must also include list plot\_params as with the
+    requirements as referenced above. Other then these requirements,
+    anything can be included in the model\_params object.
   - **eval\_func\_list**: List object containing the functions
     corresponding to the various evaluations metrics evaluation the
-    performance of the algorithim
-  - **number\_of\_simulationa**: The number of simulations
+    performance of the algorithim. Each function must accept a vector
+    cluster\_assignments that is generated from the function model\_func
+    in the model\_params list as well as the data\_params object which
+    contains the vector true cluster assignments as referenced above.
+  - **number\_of\_simulations**: The number of simulations
   - **save\_path**: The file path to save the results from the
     simualations
 
@@ -148,7 +157,7 @@ model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 1 1 1 1 1 1 1 1 1 3 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3
+#>  [1] 1 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1 1
 ```
 
 This is an example which shows how to use the funclustVI package to
@@ -253,7 +262,7 @@ simulate(data_params, model_params, eval_func_list, number_of_simulations, save_
     #> [1,]    5 0.8996935
     #> 
     #> $simulation_length
-    #> Time difference of 4.240194 secs
+    #> Time difference of 5.017083 secs
     #> 
     #> $eval_metric_avg_vector
     #> [1] 5.0000000 0.8996935

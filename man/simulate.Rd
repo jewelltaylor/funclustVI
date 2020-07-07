@@ -13,11 +13,11 @@ simulate(
 )
 }
 \arguments{
-\item{data_params}{List object containing the parameters required for generating the functional data and its characterics}
+\item{data_params}{List object containing the parameters required for generating the functional data and its characterics. Must include function named generate_data that accepts the data params list and returns a matrix of curves in the rows. Must also include vector named true_cluster_assignments that contains the actual cluster assignments for each curve. Must also include vector named seeds that contains seeds the seed for each iteration of the simulation. Other then these requirements, anything can be included in the data_params object.}
 
-\item{model_params}{List object containing the parameters required for model the data and generating the cluster assignments}
+\item{model_params}{List object containing the parameters required for modelling the data and generating the cluster assignments. Must include function named model_func that accepts Y, data_params and model_params and returns a vector containing the cluster assignment of each curve. Must also include list plot_params as with the requirements as referenced above. Other then these requirements, anything can be included in the model_params object.}
 
-\item{eval_func_list}{List object containing the functions corresponding to the various evaluations metrics}
+\item{eval_func_list}{List object containing the functions corresponding to the various evaluations metrics evaluation the performance of the algorithim. Each function must accept a vector cluster_assignments that is generated from the function model_func in the model_params list as well as the data_params object which contains the vector true cluster assignments as referenced above.}
 
 \item{number_of_simulations}{The number of simulations}
 

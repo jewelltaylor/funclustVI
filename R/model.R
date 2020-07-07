@@ -15,8 +15,10 @@ source("R/plot.R")
 #' @param convergence_threshold The threshold that determines when the model has converged 
 #' @param max_iterations The maximum amount of iterations for the algorithim
 #' @param verbose A boolean indicating whether or not to print the inner parameters of the model
-#'
-#' @return The fitted model 
+#' @param plot_params List of parameters corresponding to characteristics of the plot. Must include vectors xlim and ylim corresponding to the x and y limits of the plot. 
+#' @param draw Parameter that determines whether or not to plot the real vs estimated curves after fitting the model 
+#' 
+#' @return A list with entries containing varius information about the fitted model
 #' 
 #' @export
 #'

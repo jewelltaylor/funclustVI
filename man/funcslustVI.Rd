@@ -39,9 +39,13 @@ funcslustVI(
 \item{gamma_dist_config_matrix}{A matrix where the rows are the alpha and parameters for each cluster}
 
 \item{verbose}{A boolean indicating whether or not to print the inner parameters of the model}
+
+\item{draw}{Parameter that determines whether or not to plot the real vs estimated curves after fitting the model}
+
+\item{plot_params}{List of parameters corresponding to characteristics of the plot. Must include vectors xlim and ylim corresponding to the x and y limits of the plot.}
 }
 \value{
-The fitted model
+A list with entries containing varius information about the fitted model
 }
 \description{
 Generates cluster assignments and related information given functional data.
