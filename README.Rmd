@@ -45,7 +45,7 @@ The funclustVI function clusters functional data using a novel variational infer
 #### Arguments 
 * **x**: A vector of values in which the functional data is evaluated over
 * **Y**: A matrix where each row represents a curve 
-* **K**: The number of clusters 
+* **K**: The number of clusters among the curves 
 * **true_cluster_assignments**: The actual cluster assignments for each curve 
 * **init**: The initialization method for the cluster assignments 
 * **nbasis**: The number of basis functions 

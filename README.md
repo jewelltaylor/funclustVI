@@ -44,7 +44,7 @@ variational inference based approach.
   - **x**: A vector of values in which the functional data is evaluated
     over
   - **Y**: A matrix where each row represents a curve
-  - **K**: The number of clusters
+  - **K**: The number of clusters among the curves
   - **true\_cluster\_assignments**: The actual cluster assignments for
     each curve
   - **init**: The initialization method for the cluster assignments
@@ -157,7 +157,7 @@ model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 1 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1 1
+#>  [1] 3 3 3 3 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1 1 2 2 2 2 3 3 3 2 2 2
 ```
 
 This is an example which shows how to use the funclustVI package to
@@ -262,7 +262,7 @@ simulate(data_params, model_params, eval_func_list, number_of_simulations, save_
     #> [1,]    5 0.8996935
     #> 
     #> $simulation_length
-    #> Time difference of 5.017083 secs
+    #> Time difference of 5.456964 secs
     #> 
     #> $eval_metric_avg_vector
     #> [1] 5.0000000 0.8996935
