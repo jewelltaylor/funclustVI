@@ -83,9 +83,16 @@ generation, modelling and evaluation parameters specified by the user.
 #### Arguments
 
   - **data\_params**: List object containing the parameters required for
-    generating the functional data and its characterics
+    generating the functional data and its characterics. Must include
+    function named generate\_data that acception the data params list
+    and returns a matrix of curves in the rows. Other then this
+    requirement, anything can be included in the data\_params object.
   - **model\_params**: List object containing the parameters required
-    for modelling the data and generating the cluster assignments
+    for modelling the data and generating the cluster assignments. Must
+    include function named model\_func that accepts Y, data\_params and
+    model\_params and returns a vector containing the cluster assignment
+    of each curve. Other then this requirement, anything can be included
+    in the model\_params object.
   - **eval\_func\_list**: List object containing the functions
     corresponding to the various evaluations metrics evaluation the
     performance of the algorithim
@@ -141,13 +148,14 @@ model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 3 3 3 3 3 2 3 3 3 3 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2
+#>  [1] 1 1 1 1 1 1 1 1 1 3 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3
 ```
 
 This is an example which shows how to use the funclustVI package to
 cluster real data including in the package. The data corresponds to the
 daily tempuratures in Vancouver and Toronto over the month of July over
-the 10 year period 1994 to 2003.
+the 10 year period 1994 to 2003. Since draw = Traw a plot is generated
+showing the true function vs the estimated function for each cluster.
 
 ``` r
 #Data Parameters
@@ -245,7 +253,7 @@ simulate(data_params, model_params, eval_func_list, number_of_simulations, save_
     #> [1,]    5 0.8996935
     #> 
     #> $simulation_length
-    #> Time difference of 5.321759 secs
+    #> Time difference of 4.240194 secs
     #> 
     #> $eval_metric_avg_vector
     #> [1] 5.0000000 0.8996935

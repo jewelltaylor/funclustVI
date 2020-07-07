@@ -67,8 +67,8 @@ The funclustVI function returns a list with the following entries:
 The simulate function generates data, fits a model and evaluates the models predictions over a set number of iterations all using custom data generation, modelling and evaluation parameters specified by the user. 
 
 #### Arguments 
-* **data_params**: List object containing the parameters required for generating the functional data and its characterics
-* **model_params**: List object containing the parameters required for modelling the data and generating the cluster assignments 
+* **data_params**: List object containing the parameters required for generating the functional data and its characterics. Must include function named generate_data that acception the data params list and returns a matrix of curves in the rows. Other then this requirement, anything can be included in the data_params object. 
+* **model_params**: List object containing the parameters required for modelling the data and generating the cluster assignments. Must include function named model_func that accepts Y, data_params and model_params and returns a vector containing the cluster assignment of each curve. Other then this requirement, anything can be included in the model_params object. 
 * **eval_func_list**: List object containing the functions corresponding to the various evaluations metrics evaluation the performance of the algorithim
 * **number_of_simulationa**: The number of simulations 
 * **save_path**: The file path to save the results from the simualations
@@ -120,7 +120,7 @@ cluster_assignemnts = model$cluster_assignments
 print(cluster_assignemnts)
 ```
 
-This is an example which shows how to use the funclustVI package to cluster real data including in the package. The data corresponds to the daily tempuratures in Vancouver and Toronto over the month of July over the 10 year period 1994 to 2003. 
+This is an example which shows how to use the funclustVI package to cluster real data including in the package. The data corresponds to the daily tempuratures in Vancouver and Toronto over the month of July over the 10 year period 1994 to 2003. Since draw = Traw a plot is generated showing the true function vs the estimated function for each cluster. 
 
 ``` {r example_2_data, echo=FALSE, results='hide', message=FALSE}
 
