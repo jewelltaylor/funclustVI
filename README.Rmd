@@ -81,7 +81,7 @@ The simulate function returns a list with the following entries:
 
 ## Examples
 
-This is an example which shows you how to use the package to generate cluster assignments from functional data.
+This is an example which shows you how to use the package to generate cluster assignments from functional data. Refer to above function definitions above for detailed requirements. 
 
 ```{r example_1, message=FALSE}
 #Import the funclustVI package 
@@ -120,7 +120,7 @@ cluster_assignemnts = model$cluster_assignments
 print(cluster_assignemnts)
 ```
 
-This is an example which shows how to use the funclustVI package to cluster real data including in the package. The data corresponds to the daily tempuratures in Vancouver and Toronto over the month of July over the 10 year period 1994 to 2003. Since draw = Traw a plot is generated showing the true function vs the estimated function for each cluster. 
+This is an example which shows how to use the funclustVI package to cluster real data including in the package. The data corresponds to the daily tempuratures in Vancouver and Toronto over the month of July over the 10 year period 1994 to 2003. Since draw = Traw a plot is generated showing the true function vs the estimated function for each cluster. Refer to above function definitions  above for detailed requirements. 
 
 ``` {r example_2_data, echo=FALSE, results='hide', message=FALSE}
 
@@ -171,19 +171,21 @@ plot_params$ylim = c(3, 40)
 model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, max_iterations, gamma_dist_config_matrix, verbose, draw, plot_params)
 ```
 
-This is an example which shows how to run simulations. Since draw = True, a plot is generated showing the true vs estimated functions. 
+This is an example which shows how to run simulations. Refer to above function definitions for detailed requirements. 
 
 ```{r simulation_plot}
+library(funclustVI)
+
 #Initializations
-number_of_simulations = 1
-save_path = NULL
+number_of_simulations = 30
+save_path = "~/Desktop/results.csv"
 
 #Data Parameters
 x = seq(from=0,to=pi/3, length = 100)
 K = 3
 curves_per_cluster = 50 
 true_cluster_assignments = rep(1:K,each = curves_per_cluster)
-seeds = c(1)
+seeds = c(1:30)
 
 #Pack into data parameter list
 data_params = list()
@@ -198,12 +200,12 @@ data_params$generate_data = Case_7
 init = "km"
 nbasis = 6
 gamma_dist_config_matrix = matrix(0, 2, K)
-gamma_dist_config_matrix[1, ] = c(78.125, 78.125, 78.125) * 100
-gamma_dist_config_matrix[2, ] = c(12.5, 12.5, 12.5) * 100
+gamma_dist_config_matrix[1, ] = c(78.125, 78.125, 78.125) * 5
+gamma_dist_config_matrix[2, ] = c(12.5, 12.5, 12.5) * 5
 convergence_threshold = 1
 max_iterations = 10
 verbose = FALSE
-draw = TRUE
+draw = FALSE
 
 #Pack into model parameter list 
 model_params = list()
@@ -228,4 +230,5 @@ eval_func_list$vmeasure = get_v_measure
 
 #Run the simulations
 simulate(data_params, model_params, eval_func_list, number_of_simulations, save_path)
+
 ```

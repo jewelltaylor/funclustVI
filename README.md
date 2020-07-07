@@ -120,7 +120,8 @@ The simulate function returns a list with the following entries:
 ## Examples
 
 This is an example which shows you how to use the package to generate
-cluster assignments from functional data.
+cluster assignments from functional data. Refer to above function
+definitions above for detailed requirements.
 
 ``` r
 #Import the funclustVI package 
@@ -157,7 +158,7 @@ model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 3 3 3 3 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1 1 2 2 2 2 3 3 3 2 2 2
+#>  [1] 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 1 3 3 3 3 3 3 3 3 3
 ```
 
 This is an example which shows how to use the funclustVI package to
@@ -165,6 +166,7 @@ cluster real data including in the package. The data corresponds to the
 daily tempuratures in Vancouver and Toronto over the month of July over
 the 10 year period 1994 to 2003. Since draw = Traw a plot is generated
 showing the true function vs the estimated function for each cluster.
+Refer to above function definitions above for detailed requirements.
 
 ``` r
 #Data Parameters
@@ -192,20 +194,22 @@ model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence
 
 <img src="man/figures/README-example_2-1.png" width="100%" />
 
-This is an example which shows how to run simulations. Since draw =
-True, a plot is generated showing the true vs estimated functions.
+This is an example which shows how to run simulations. Refer to above
+function definitions for detailed requirements.
 
 ``` r
+library(funclustVI)
+
 #Initializations
-number_of_simulations = 1
-save_path = NULL
+number_of_simulations = 30
+save_path = "~/Desktop/results.csv"
 
 #Data Parameters
 x = seq(from=0,to=pi/3, length = 100)
 K = 3
 curves_per_cluster = 50 
 true_cluster_assignments = rep(1:K,each = curves_per_cluster)
-seeds = c(1)
+seeds = c(1:30)
 
 #Pack into data parameter list
 data_params = list()
@@ -220,12 +224,12 @@ data_params$generate_data = Case_7
 init = "km"
 nbasis = 6
 gamma_dist_config_matrix = matrix(0, 2, K)
-gamma_dist_config_matrix[1, ] = c(78.125, 78.125, 78.125) * 100
-gamma_dist_config_matrix[2, ] = c(12.5, 12.5, 12.5) * 100
+gamma_dist_config_matrix[1, ] = c(78.125, 78.125, 78.125) * 5
+gamma_dist_config_matrix[2, ] = c(12.5, 12.5, 12.5) * 5
 convergence_threshold = 1
 max_iterations = 10
 verbose = FALSE
-draw = TRUE
+draw = FALSE
 
 #Pack into model parameter list 
 model_params = list()
@@ -250,19 +254,74 @@ eval_func_list$vmeasure = get_v_measure
 
 #Run the simulations
 simulate(data_params, model_params, eval_func_list, number_of_simulations, save_path)
+#> seed  1 : mismatch  =  5  vmeasure  =  0.8996935  
+#> seed  2 : mismatch  =  4  vmeasure  =  0.9011219  
+#> seed  3 : mismatch  =  3  vmeasure  =  0.9192316  
+#> seed  4 : mismatch  =  8  vmeasure  =  0.8322171  
+#> seed  5 : mismatch  =  6  vmeasure  =  0.8641855  
+#> seed  6 : mismatch  =  8  vmeasure  =  0.8365829  
+#> seed  7 : mismatch  =  3  vmeasure  =  0.9305507  
+#> seed  8 : mismatch  =  5  vmeasure  =  0.8996935  
+#> seed  9 : mismatch  =  6  vmeasure  =  0.8862312  
+#> seed  10 : mismatch  =  1  vmeasure  =  0.9701912  
+#> seed  11 : mismatch  =  3  vmeasure  =  0.9305507  
+#> seed  12 : mismatch  =  5  vmeasure  =  0.8850621  
+#> seed  13 : mismatch  =  5  vmeasure  =  0.8996935  
+#> seed  14 : mismatch  =  6  vmeasure  =  0.8641855  
+#> seed  15 : mismatch  =  6  vmeasure  =  0.8705214  
+#> seed  16 : mismatch  =  6  vmeasure  =  0.8862312  
+#> seed  17 : mismatch  =  6  vmeasure  =  0.8622702  
+#> seed  18 : mismatch  =  7  vmeasure  =  0.8497806  
+#> seed  19 : mismatch  =  2  vmeasure  =  0.9487883  
+#> seed  20 : mismatch  =  13  vmeasure  =  0.7831589  
+#> seed  21 : mismatch  =  2  vmeasure  =  0.9405073  
+#> seed  22 : mismatch  =  2  vmeasure  =  0.9487883  
+#> seed  23 : mismatch  =  3  vmeasure  =  0.9192316  
+#> seed  24 : mismatch  =  2  vmeasure  =  0.9487883  
+#> seed  25 : mismatch  =  0  vmeasure  =  1  
+#> seed  26 : mismatch  =  2  vmeasure  =  0.9405073  
+#> seed  27 : mismatch  =  4  vmeasure  =  0.9011219  
+#> seed  28 : mismatch  =  12  vmeasure  =  0.8030704  
+#> seed  29 : mismatch  =  3  vmeasure  =  0.9305507  
+#> seed  30 : mismatch  =  10  vmeasure  =  0.8226345  
+#> Average  mismatch  =  4.933333 
+#> Average  vmeasure  =  0.8958381
+#> $result_matrix
+#>       [,1]      [,2]
+#>  [1,]    5 0.8996935
+#>  [2,]    4 0.9011219
+#>  [3,]    3 0.9192316
+#>  [4,]    8 0.8322171
+#>  [5,]    6 0.8641855
+#>  [6,]    8 0.8365829
+#>  [7,]    3 0.9305507
+#>  [8,]    5 0.8996935
+#>  [9,]    6 0.8862312
+#> [10,]    1 0.9701912
+#> [11,]    3 0.9305507
+#> [12,]    5 0.8850621
+#> [13,]    5 0.8996935
+#> [14,]    6 0.8641855
+#> [15,]    6 0.8705214
+#> [16,]    6 0.8862312
+#> [17,]    6 0.8622702
+#> [18,]    7 0.8497806
+#> [19,]    2 0.9487883
+#> [20,]   13 0.7831589
+#> [21,]    2 0.9405073
+#> [22,]    2 0.9487883
+#> [23,]    3 0.9192316
+#> [24,]    2 0.9487883
+#> [25,]    0 1.0000000
+#> [26,]    2 0.9405073
+#> [27,]    4 0.9011219
+#> [28,]   12 0.8030704
+#> [29,]    3 0.9305507
+#> [30,]   10 0.8226345
+#> 
+#> $simulation_length
+#> Time difference of 3.030097 mins
+#> 
+#> $eval_metric_avg_vector
+#> [1] 4.9333333 0.8958381
 ```
-
-<img src="man/figures/README-simulation_plot-1.png" width="100%" />
-
-    #> seed  1 : mismatch  =  5  vmeasure  =  0.8996935  
-    #> Average  mismatch  =  5 
-    #> Average  vmeasure  =  0.8996935
-    #> $result_matrix
-    #>      [,1]      [,2]
-    #> [1,]    5 0.8996935
-    #> 
-    #> $simulation_length
-    #> Time difference of 5.456964 secs
-    #> 
-    #> $eval_metric_avg_vector
-    #> [1] 5.0000000 0.8996935
