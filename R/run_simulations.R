@@ -32,14 +32,16 @@ simulate <- function(data_params, model_params, eval_func_list, number_of_simula
     seed = data_params$seeds[simulation_number]
     res = compute_function(seed, data_params, model_params, eval_func_list)
     
+    cat("seed ", seed, ": ")
     for (i in 1:num_of_eval_funcs) {
       prev_sum = eval_metric_sum_vector[i]
       curr_val = res[[i]]
       final_res_mat[simulation_number, i] = curr_val
       eval_metric_sum_vector[i] = prev_sum + curr_val
       eval_func_name = eval_func_name_list[i]
-      cat(eval_func_name, " = ", curr_val, "\n")
+      cat(eval_func_name, " = ", curr_val, " ")
     }
+    cat("\n")
     
     count = count + 1
   }

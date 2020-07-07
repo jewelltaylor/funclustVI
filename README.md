@@ -51,6 +51,8 @@ variational inference based approach.
   - **nbasis**: The number of basis functions
   - **convergence\_threshold**: The threshold that determines when the
     model has converged
+  - **max\_iterations**: The maximum amount of iterations for the
+    algorithim
   - **gamma\_dist\_config\_matrix**: A matrix in which the first row is
     the alpha parameters for each cluster and the second row is the beta
     parameters for each cluster.
@@ -139,7 +141,7 @@ model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 3 3 3 3 3 3 3 2 2 3
+#>  [1] 3 3 3 3 3 2 3 3 3 3 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2
 ```
 
 This is an example which shows how to use the funclustVI package to
@@ -235,8 +237,7 @@ simulate(data_params, model_params, eval_func_list, number_of_simulations, save_
 
 <img src="man/figures/README-simulation_plot-1.png" width="100%" />
 
-    #> mismatch  =  5 
-    #> vmeasure  =  0.8996935 
+    #> seed  1 : mismatch  =  5  vmeasure  =  0.8996935  
     #> Average  mismatch  =  5 
     #> Average  vmeasure  =  0.8996935
     #> $result_matrix
@@ -244,7 +245,7 @@ simulate(data_params, model_params, eval_func_list, number_of_simulations, save_
     #> [1,]    5 0.8996935
     #> 
     #> $simulation_length
-    #> Time difference of 3.9641 secs
+    #> Time difference of 5.321759 secs
     #> 
     #> $eval_metric_avg_vector
     #> [1] 5.0000000 0.8996935

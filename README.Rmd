@@ -50,6 +50,7 @@ The funclustVI function clusters functional data using a novel variational infer
 * **init**: The initialization method for the cluster assignments 
 * **nbasis**: The number of basis functions 
 * **convergence_threshold**: The threshold that determines when the model has converged 
+* **max_iterations**: The maximum amount of iterations for the algorithim
 * **gamma_dist_config_matrix**: A matrix in which the first row is the alpha parameters for each cluster and the second row is the beta parameters for each cluster. 
 * **verbose**: Parameter that determines whether or not to log output regarding model hyperparameters 
 * **draw**: Parameter that determines whether or not to plot the real vs estimated curves after fitting the model 

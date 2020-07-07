@@ -34,6 +34,8 @@ funcslustVI(
 
 \item{convergence_threshold}{The threshold that determines when the model has converged}
 
+\item{max_iterations}{The maximum amount of iterations for the algorithim}
+
 \item{gamma_dist_config_matrix}{A matrix where the rows are the alpha and parameters for each cluster}
 
 \item{verbose}{A boolean indicating whether or not to print the inner parameters of the model}

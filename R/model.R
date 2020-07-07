@@ -13,6 +13,7 @@ source("R/plot.R")
 #' @param true_cluster_assignments The true cluster assignments 
 #' @param gamma_dist_config_matrix A matrix where the rows are the alpha and parameters for each cluster
 #' @param convergence_threshold The threshold that determines when the model has converged 
+#' @param max_iterations The maximum amount of iterations for the algorithim
 #' @param verbose A boolean indicating whether or not to print the inner parameters of the model
 #'
 #' @return The fitted model 
