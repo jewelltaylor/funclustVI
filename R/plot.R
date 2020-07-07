@@ -43,5 +43,5 @@ plot_data <- function(x, Y, B, m_list, true_m_not, true_cluster_assignments, plo
     }
   }
   
-  legend(x= "topleft", y=0.92, legend=c("True Function", "Estimated Function", "Actual Curves"), col=c("black", "red", "grey"), lty=c(1,1,1))
+  legend(x= "topleft", cex=.75, legend=c("True Function", "Estimated Function", "Actual Curves"), col=c("black", "red", "grey"), lty=c(1,1,1))
 }

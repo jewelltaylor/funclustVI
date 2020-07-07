@@ -15,8 +15,8 @@ knitr::opts_chunk$set(
 
 # funclustVI
 
-The following package was created by John Jewell as a part of my Undergraduate Dissertation at Western University under the supervision of Professor Camila de Souza.
-The package serves to cluster functional data using variational inference. More details in regards to the functionality of the package is available in the examples section.
+The following package was created by John Jewell as a part of an Undergraduate Dissertation at Western University under the supervision of Professor Camila de Souza.
+The package serves to cluster functional data using variational inference. More details in regards to the functionality of the package is available in the usage and examples section.
 
 <!-- badges: start -->
 <!-- badges: end -->

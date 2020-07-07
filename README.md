@@ -3,11 +3,12 @@
 
 # funclustVI
 
-The following package was created by John Jewell as a part of my
+The following package was created by John Jewell as a part of an
 Undergraduate Dissertation at Western University under the supervision
 of Professor Camila de Souza. The package serves to cluster functional
 data using variational inference. More details in regards to the
-functionality of the package is available in the examples section.
+functionality of the package is available in the usage and examples
+section.
 
 <!-- badges: start -->
 
@@ -162,7 +163,7 @@ model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 1 1 2 1 1 1 1 1 1 2 3 3 3 3 3 3 3 3 3 3 2 2 2 2 2 2 2 2 2 2
+#>  [1] 2 2 2 2 3 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 3 3 3 3 3 3 3 3 3 3
 ```
 
 This is an example which shows how to use the funclustVI package to
@@ -270,7 +271,7 @@ simulate(data_params, model_params, eval_func_list, number_of_simulations, save_
 #> [1,]    5 0.8996935
 #> 
 #> $simulation_length
-#> Time difference of 10.03695 secs
+#> Time difference of 9.712013 secs
 #> 
 #> $eval_metric_avg_vector
 #> [1] 5.0000000 0.8996935
