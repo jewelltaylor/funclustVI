@@ -179,7 +179,7 @@ This is an example which shows how to run simulations. Refer to above function d
 library(funclustVI)
 
 #Initializations
-number_of_simulations = 5
+number_of_simulations = 1
 save_path = NULL
 
 #Data Parameters

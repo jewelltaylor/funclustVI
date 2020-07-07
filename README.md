@@ -162,7 +162,7 @@ model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 3 3 3 3 3 3 3 3 3 3 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 3
+#>  [1] 2 2 3 2 3 3 2 2 2 2 1 1 1 1 1 1 1 1 1 1 3 3 3 3 3 3 3 3 3 3
 ```
 
 This is an example which shows how to use the funclustVI package to
@@ -208,7 +208,7 @@ function definitions for detailed requirements.
 library(funclustVI)
 
 #Initializations
-number_of_simulations = 5
+number_of_simulations = 1
 save_path = NULL
 
 #Data Parameters
@@ -263,23 +263,15 @@ eval_func_list$vmeasure = get_v_measure
 #Run the simulations
 simulate(data_params, model_params, eval_func_list, number_of_simulations, save_path)
 #> seed  1 : mismatch  =  5  vmeasure  =  0.8996935  
-#> seed  2 : mismatch  =  4  vmeasure  =  0.9011219  
-#> seed  3 : mismatch  =  3  vmeasure  =  0.9192316  
-#> seed  4 : mismatch  =  8  vmeasure  =  0.8322171  
-#> seed  5 : mismatch  =  6  vmeasure  =  0.8641855  
-#> Average  mismatch  =  5.2 
-#> Average  vmeasure  =  0.8832899
+#> Average  mismatch  =  5 
+#> Average  vmeasure  =  0.8996935
 #> $result_matrix
 #>      [,1]      [,2]
 #> [1,]    5 0.8996935
-#> [2,]    4 0.9011219
-#> [3,]    3 0.9192316
-#> [4,]    8 0.8322171
-#> [5,]    6 0.8641855
 #> 
 #> $simulation_length
-#> Time difference of 35.3349 secs
+#> Time difference of 9.882715 secs
 #> 
 #> $eval_metric_avg_vector
-#> [1] 5.2000000 0.8832899
+#> [1] 5.0000000 0.8996935
 ```
