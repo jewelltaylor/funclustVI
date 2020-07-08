@@ -54,7 +54,7 @@ The funclustVI function clusters functional data using a novel variational infer
 * **gamma_dist_config_matrix**: A matrix in which the first row is the alpha parameters for each cluster and the second row is the beta parameters for each cluster. 
 * **verbose**: Parameter that determines whether or not to log output regarding model hyperparameters 
 * **draw**: Parameter that determines whether or not to plot the real vs estimated curves after fitting the model 
-* **plot_params**: List of parameters corresponding to characteristics of the plot. Must include vectors xlim and ylim corresponding to the x and y limits of the plot. If NULL is supplied, plot function defaults are used. Must include boolean show_curves. If true the actual curves are shown with diffent colors. 
+* **plot_params**: List of parameters corresponding to characteristics of the plot. Must include vectors xlim and ylim corresponding to the x and y limits of the plot. If NULL is supplied, plot function defaults are used. Must include boolean show_curves. If true the actual curves are shown with diffent colors. Must include string title. If title is NULL, default title used is Plot. 
 
 #### Return Value 
 The funclustVI function returns a list with the following entries:
@@ -111,6 +111,7 @@ plot_params = list()
 plot_params$xlim = NULL 
 plot_params$ylim = c(1, 6)
 plot_params$show_curves = FALSE 
+plot_params$title = NULL
 
 #Fit the model
 model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, max_iterations, gamma_dist_config_matrix, verbose, draw, plot_params)
@@ -168,6 +169,7 @@ plot_params = list()
 plot_params$xlim = NULL
 plot_params$ylim = c(3, 40)
 plot_params$show_curves = TRUE
+plot_params$title = NULL
 
 #Fit the model 
 model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, max_iterations, gamma_dist_config_matrix, verbose, draw, plot_params)
@@ -224,6 +226,7 @@ plot_params = list()
 plot_params$xlim = NULL
 plot_params$ylim = c(1, 6)
 plot_params$show_curves = FALSE 
+plot_params$title = NULL
 model_params$plot_params = plot_params
 
 #Evaluation parameter list 

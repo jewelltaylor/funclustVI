@@ -66,7 +66,8 @@ variational inference based approach.
     corresponding to the x and y limits of the plot. If NULL is
     supplied, plot function defaults are used. Must include boolean
     show\_curves. If true the actual curves are shown with diffent
-    colors.
+    colors. Must include string title. If title is NULL, default title
+    used is Plot.
 
 #### Return Value
 
@@ -155,6 +156,7 @@ plot_params = list()
 plot_params$xlim = NULL 
 plot_params$ylim = c(1, 6)
 plot_params$show_curves = FALSE 
+plot_params$title = NULL
 
 #Fit the model
 model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, max_iterations, gamma_dist_config_matrix, verbose, draw, plot_params)
@@ -163,7 +165,7 @@ model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 2 2 2 2 3 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 3 3 3 3 3 3 3 3 3 3
+#>  [1] 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 1 1 2 1 2 1 2 1 1 1
 ```
 
 This is an example which shows how to use the funclustVI package to
@@ -195,6 +197,7 @@ plot_params = list()
 plot_params$xlim = NULL
 plot_params$ylim = c(3, 40)
 plot_params$show_curves = TRUE
+plot_params$title = NULL
 
 #Fit the model 
 model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, max_iterations, gamma_dist_config_matrix, verbose, draw, plot_params)
@@ -254,6 +257,7 @@ plot_params = list()
 plot_params$xlim = NULL
 plot_params$ylim = c(1, 6)
 plot_params$show_curves = FALSE 
+plot_params$title = NULL
 model_params$plot_params = plot_params
 
 #Evaluation parameter list 
@@ -271,7 +275,7 @@ simulate(data_params, model_params, eval_func_list, number_of_simulations, save_
 #> [1,]    5 0.8996935
 #> 
 #> $simulation_length
-#> Time difference of 9.712013 secs
+#> Time difference of 9.539337 secs
 #> 
 #> $eval_metric_avg_vector
 #> [1] 5.0000000 0.8996935
