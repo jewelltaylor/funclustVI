@@ -38,7 +38,7 @@ simulate.
 ### funclustVI
 
 The funclustVI function clusters functional data using a novel
-variational inference based approach.
+variational inference based approach and returns a fitted model.
 
 #### Arguments
 
@@ -66,8 +66,8 @@ variational inference based approach.
     corresponding to the x and y limits of the plot. If NULL is
     supplied, plot function defaults are used. Must include boolean
     show\_curves. If true the actual curves are shown with diffent
-    colors. Must include string title. If title is NULL, default title
-    used is Plot.
+    colors. Must include string title. If title is NULL, the default
+    title used is Plot.
 
 #### Return Value
 
@@ -142,7 +142,7 @@ Y = Case_7(data_params)
 K = 3
 true_cluster_assignments = rep(1:K,each = curves_per_cluster)
 
-# Model Parameters 
+# Model Parameters
 init = "km"
 nbasis = 6
 convergence_threshold = 1
@@ -165,7 +165,7 @@ model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 3 3 3 3 3 3 3 3 3 3 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1
+#>  [1] 1 1 1 2 1 1 1 1 1 1 3 3 3 3 3 3 3 3 3 3 2 2 2 2 2 2 2 2 2 2
 ```
 
 This is an example which shows how to use the funclustVI package to
@@ -275,7 +275,7 @@ simulate(data_params, model_params, eval_func_list, number_of_simulations, save_
 #> [1,]    5 0.8996935
 #> 
 #> $simulation_length
-#> Time difference of 9.490086 secs
+#> Time difference of 9.116129 secs
 #> 
 #> $eval_metric_avg_vector
 #> [1] 5.0000000 0.8996935

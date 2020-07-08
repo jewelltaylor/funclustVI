@@ -455,7 +455,7 @@ get_approx_probability_matrix_km <- function(Y, K, x) {
 #' @examples get_equal_probability_matrix(K, curves_per_cluster, x)
 
 get_approx_probability_matrix_hcl <- function(Y, K, x) {
-  predictions = cutree(hclust(dist(cluster_data), method = "ward"), number_of_clusters)
+  predictions = cutree(hclust(dist(Y), method = "ward"), K)
   probability_matrix = matrix(0, NROW(Y), K)
   for (i in 1:length(predictions)) {
     cluster_prediction = predictions[[i]]
