@@ -125,8 +125,8 @@ The simulate function returns a list with the following entries:
 ## Examples
 
 This is an example which shows you how to use the package to generate
-cluster assignments from functional data. Refer to above function
-definitions above for detailed requirements.
+cluster assignments from functional data. Refer to usage section above
+for detailed requirements.
 
 ``` r
 #Import the funclustVI package 
@@ -165,7 +165,7 @@ model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence
 cluster_assignemnts = model$cluster_assignments
 
 print(cluster_assignemnts)
-#>  [1] 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 1 1 2 1 2 1 2 1 1 1
+#>  [1] 3 3 3 3 3 3 3 3 3 3 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1
 ```
 
 This is an example which shows how to use the funclustVI package to
@@ -174,7 +174,7 @@ daily tempuratures in Vancouver and Toronto over the month of July over
 the 10 year period 1994 to 2003. Since draw = Traw a plot is generated
 showing the true function vs the estimated function for each cluster.
 Since show\_curves is TRUE, the plot includes the actual curves with
-differing colors. Refer to above function definitions above for detailed
+differing colors. Refer to above usage section for detailed
 requirements.
 
 ``` r
@@ -206,12 +206,12 @@ model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence
 <img src="man/figures/README-example_2-1.png" width="100%" />
 
 This is an example which shows how to run simulations. Refer to above
-function definitions for detailed requirements.
+usage section for detailed requirements.
 
 ``` r
 library(funclustVI)
 
-#Initializations
+#Initializationw
 number_of_simulations = 1
 save_path = NULL
 
@@ -275,7 +275,7 @@ simulate(data_params, model_params, eval_func_list, number_of_simulations, save_
 #> [1,]    5 0.8996935
 #> 
 #> $simulation_length
-#> Time difference of 9.539337 secs
+#> Time difference of 9.490086 secs
 #> 
 #> $eval_metric_avg_vector
 #> [1] 5.0000000 0.8996935

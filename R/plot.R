@@ -48,5 +48,9 @@ plot_data <- function(x, Y, B, m_list, true_m_not, true_cluster_assignments, plo
     }
   }
   
-  legend(x= "topleft", cex=.75, legend=c("True Function", "Estimated Function", "Actual Curves"), col=c("black", "red", "grey"), lty=c(1,1,1))
+  if(isTRUE(show_curves) == TRUE) {
+    legend(x= "topleft", cex=.75, legend=c("True Function", "Estimated Function", "Actual Curves"), col=c("black", "red", "grey"), lty=c(1,1,1))
+  } else {
+    legend(x= "topleft", cex=.75, legend=c("True Function", "Estimated Function"), col=c("black", "red"), lty=c(1,1))
+  }
 }

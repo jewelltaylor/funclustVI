@@ -81,7 +81,7 @@ The simulate function returns a list with the following entries:
 
 ## Examples
 
-This is an example which shows you how to use the package to generate cluster assignments from functional data. Refer to above function definitions above for detailed requirements. 
+This is an example which shows you how to use the package to generate cluster assignments from functional data. Refer to usage section above for detailed requirements. 
 
 ```{r example_1, message=FALSE}
 #Import the funclustVI package 
@@ -122,7 +122,7 @@ cluster_assignemnts = model$cluster_assignments
 print(cluster_assignemnts)
 ```
 
-This is an example which shows how to use the funclustVI package to cluster real data including in the package. The data corresponds to the daily tempuratures in Vancouver and Toronto over the month of July over the 10 year period 1994 to 2003. Since draw = Traw a plot is generated showing the true function vs the estimated function for each cluster. Since show_curves is TRUE, the plot includes the actual curves with differing colors. Refer to above function definitions above for detailed requirements. 
+This is an example which shows how to use the funclustVI package to cluster real data including in the package. The data corresponds to the daily tempuratures in Vancouver and Toronto over the month of July over the 10 year period 1994 to 2003. Since draw = Traw a plot is generated showing the true function vs the estimated function for each cluster. Since show_curves is TRUE, the plot includes the actual curves with differing colors. Refer to above usage section for detailed requirements. 
 
 ``` {r example_2_data, echo=FALSE, results='hide', message=FALSE}
 
@@ -175,12 +175,12 @@ plot_params$title = NULL
 model = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, max_iterations, gamma_dist_config_matrix, verbose, draw, plot_params)
 ```
 
-This is an example which shows how to run simulations. Refer to above function definitions for detailed requirements. 
+This is an example which shows how to run simulations. Refer to above usage section for detailed requirements. 
 
 ```{r simulation_plot}
 library(funclustVI)
 
-#Initializations
+#Initializationw
 number_of_simulations = 1
 save_path = NULL
 
