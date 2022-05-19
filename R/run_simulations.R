@@ -62,7 +62,8 @@ simulate <- function(data_params, model_params, eval_func_list, number_of_simula
   
   simulation_length = end_time - start_time 
   
-  result_list = list("result_matrix" = final_res_mat, "simulation_length" = simulation_length, "eval_metric_avg_vector" = eval_metric_avg_vector)
+  res = compute_function(data_params$seeds[1], data_params, model_params, eval_func_list) # return one set of simulation results
+  result_list = c(list("result_matrix" = final_res_mat, "simulation_length" = simulation_length, "eval_metric_avg_vector" = eval_metric_avg_vector), res)
   return(result_list)
 }
 
@@ -92,7 +93,8 @@ compute_function <- function(seed, data_params, model_params, eval_func_list) {
   
   model_func = model_params$model_func
   
-  cluster_assignments = model_func(Y, data_params, model_params)
+  clf = model_func(Y, data_params, model_params)
+  cluster_assignments = clf$cluster_assignments
   
   result_list = list()
   
@@ -103,7 +105,7 @@ compute_function <- function(seed, data_params, model_params, eval_func_list) {
     result_list[[eval_func_name]] = res
   }
   
-  return(result_list)
+  return(c(result_list, clf))
 }
 
 #' Model function wrapper for the funclustVI 
@@ -126,52 +128,20 @@ get_funclustVI_cluster_assignments <- function(Y, data_params, model_params) {
   convergence_threshold = model_params$convergence_threshold
   max_iterations = model_params$max_iterations
   gamma_dist_config_matrix = model_params$gamma_dist_config_matrix
+  d_not_vector = model_params$d_not_vector
+  m_not_vector = model_params$m_not_vector
+  v_not_vector = model_params$v_not_vector
   plot_params = model_params$plot_params
   true_cluster_assignments = data_params$true_cluster_assignments
   verbose = model_params$verbose 
   draw = model_params$draw
-  clf = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, max_iterations, gamma_dist_config_matrix, verbose, draw, plot_params)
-  cluster_assignments = clf$cluster_assignments
-  return(cluster_assignments)
+  clf = funcslustVI(x, Y, K, true_cluster_assignments, init, nbasis, convergence_threshold, max_iterations, gamma_dist_config_matrix, 
+                    d_not_vector, m_not_vector, v_not_vector,
+                    verbose, draw, plot_params)
+  return(clf)
 }
 
 
-#' Gets the number of mismatches for a single iteration of the simulation 
-#'
-#' @param cluster_assignments A vector where each entry is the cluster assignment for the corresponging curve 
-#' @param K The number of clusters in the data
-#' @param curves_per_cluster The number of curves per cluster 
-#'
-#' @return The number of mismatches  
-#' 
-#' @export
-#'
-#' @examples get_mismatches(cluster_assignments, K, curves_per_cluster)
-
-
-get_mismatches <- function(cluster_assignments, data_params) {
-  true_cluster_assignments = data_params$true_cluster_assignments
-  mismatches = Mismatch(cluster_assignments, true_cluster_assignments, K)
-  return(mismatches)
-}
-
-#' Gets the number of vmeaure for a single iteration of the simulation 
-#'
-#' @param cluster_assignments A vector where each entry is the cluster assignment for the corresponging curve 
-#' @param K The number of clusters in the data
-#' @param curves_per_cluster The number of curves per cluster 
-#'
-#' @return The vmeasure
-#' 
-#' @export 
-#'
-#' @examples get_v_measure(cluster_assignments, K, curves_per_cluster)
-
-get_v_measure <- function(cluster_assignments, data_params) {
-  true_cluster_assignments = data_params$true_cluster_assignments
-  v_measure = sabre::vmeasure(cluster_assignments, true_cluster_assignments)$v_measure
-  return(v_measure)
-}
 
 
 
